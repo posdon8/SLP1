@@ -2,7 +2,7 @@
    CSS VARIABLES
    ========================================== */
 :root {
-  /* Colors */
+
   --primary: #0c1781;
   --primary-light: #072474;
   --success: #4caf50;
@@ -365,7 +365,7 @@ body {
   font-size: 12px;
   font-weight: 700;
   z-index: 10;
-  backdrop-filter: blur(4px);
+
 }
 
 .enrolled-badge {

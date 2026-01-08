@@ -78,7 +78,7 @@
   background:  #ececec ;
   color: rgb(12, 0, 0);
   cursor: pointer;
-  user-select: none;
+
   transition: all 0.3s ease;
   font-weight: 600;
   height: 45px;

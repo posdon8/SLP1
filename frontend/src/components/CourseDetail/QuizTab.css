@@ -4,7 +4,7 @@
   padding: 20px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(39, 39, 39, 0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .quiz-tab h2 {

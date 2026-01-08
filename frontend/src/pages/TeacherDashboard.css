@@ -423,7 +423,7 @@
   z-index: 0;
   margin: 0;
   padding: 0;
-  pointer-events: none; /* <- KHÔNG CHẶN click */
+  pointer-events: none; 
 }
 
 .floating-shapes li {

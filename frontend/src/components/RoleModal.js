@@ -67,10 +67,12 @@ useEffect(() => {
 
         <div className="benefits-list">
           <h4> Quyền lợi của Giảng viên</h4>
-          <p> Tạo và quản lý khóa học riêng</p>
-          <p> Nhận thu nhập từ học viên</p>
-          <p> Quản lý stats (sinh viên, đánh giá)</p>
-          <p> Giữ lại quyền lợi Student</p>
+          <ul>
+          <li> Tạo và quản lý khóa học riêng</li>
+          <li> Nhận thu nhậli từ học viên</li>
+          <li> Quản lý stats (sinh viên, đánh giá)</li>
+          <li> Giữ lại quyền lợi Student</li>
+          </ul>
         </div>
         <div className="responsibility-box">
   <h4> Trách nhiệm của Giảng viên</h4>

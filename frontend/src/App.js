@@ -1,4 +1,4 @@
-// frontend/src/App.js
+
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import React, { useState } from 'react';
 import { jwtDecode } from "jwt-decode";

@@ -113,10 +113,10 @@ export default function NewsBanner({ onSelectNews }) {
         <span className="news-tag">{current.category}</span>
         <h2>{current.title}</h2>
         <p>
-  {String(current.description || "")
-    .slice(0, 60)}
-  {String(current.description || "").length > 60 && "..."}
-</p>
+            {String(current.description || "")
+              .slice(0, 60)}
+            {String(current.description || "").length > 60 && "..."}
+          </p>
 
 
 

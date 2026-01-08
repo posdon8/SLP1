@@ -60,7 +60,7 @@
   align-items: center;
   margin-bottom: 10px;
   cursor: pointer;
-  user-select: none;
+
 }
 
 .categoryCheckbox:last-child {

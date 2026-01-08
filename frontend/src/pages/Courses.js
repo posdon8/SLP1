@@ -1,110 +1,281 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import "./CourseDetail.css";
+// frontend/src/pages/Courses.js
+import React, { useState, useEffect } from 'react';
+import { courseAPI } from '../services/api';
+import './Courses.css';
 
-export default function CourseDetail() {
-const { id } = useParams();
-const [course, setCourse] = useState(null);
-const navigate = useNavigate();
+export default function Courses() {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filter, setFilter] = useState('all'); // all, active, my-courses
+  const [enrolling, setEnrolling] = useState(null);
 
-useEffect(() => {
-fetch(`http://localhost:5000/api/courses/${id}`)
-.then((res) => res.json())
-.then((data) => setCourse(data))
-.catch((err) => console.error("Error fetching course:", err));
-}, [id]);
+  useEffect(() => {
+    fetchCourses();
+  }, [currentPage, filter]);
 
-if (!course) {
-return <div className="course-detail-container">Đang tải khóa học...</div>;
-}
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-return ( <div className="course-detail-container">
-{/* Banner */} <div className="course-banner">
-<img src={course.thumbnail || "/default-banner.jpg"} alt={course.title} /> <div className="overlay"></div> <div className="course-info"> <h1>{course.title}</h1> <p>👨‍🏫 Giảng viên: {course.instructor || "Chưa cập nhật"}</p> <p>⭐ Đánh giá: {course.rating || "Chưa có"}</p> </div> </div>
+      let response;
+      if (filter === 'my-courses') {
+        response = await courseAPI.getMyCourses();
+        setCourses(response.data.map(enrollment => ({
+          ...enrollment.course,
+          enrollment: enrollment
+        })));
+      } else {
+        response = await courseAPI.getAllCourses({
+          page: currentPage,
+          limit: 12,
+          status: filter === 'all' ? 'active' : filter
+        });
+        setCourses(response.data.courses);
+        setTotalPages(response.data.totalPages);
+      }
+    } catch (err) {
+      setError(err.message || 'Không thể tải danh sách khóa học');
+      console.error('Error fetching courses:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-```
-  {/* Nội dung khóa học */}
-  <div className="course-content">
-    <h2>Giới thiệu khóa học</h2>
-    <p>{course.description}</p>
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      fetchCourses();
+      return;
+    }
 
-    <h2>Thông tin chi tiết</h2>
-    <p>
-      ⏱ Thời lượng: {course.duration || "Không rõ"} <br />
-      💪 Cấp độ: {course.level || "Mọi trình độ"} <br />
-      👥 Học viên: {course.totalStudents || 0}
-    </p>
+    try {
+      setLoading(true);
+      const response = await courseAPI.searchCourses(searchQuery, currentPage);
+      setCourses(response.data);
+    } catch (err) {
+      setError('Không thể tìm kiếm khóa học');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    <h2>Danh sách bài học</h2>
-    <ul className="lesson-list">
-      {course.lessons && course.lessons.length > 0 ? (
-        course.lessons.map((lesson, index) => (
-          <li key={index}>
-            {lesson.title} — {lesson.duration}
-          </li>
-        ))
-      ) : (
-        <p>Khóa học này chưa có bài học nào.</p>
-      )}
-    </ul>
+  const handleEnroll = async (courseId) => {
+    try {
+      setEnrolling(courseId);
+      await courseAPI.enrollCourse(courseId);
+      alert('Đăng ký khóa học thành công! 🎉');
+      fetchCourses(); // Refresh list
+    } catch (err) {
+      alert(err.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+    } finally {
+      setEnrolling(null);
+    }
+  };
 
-    <h2>Giảng viên</h2>
-    <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-      <img
-        src={course.instructorImage || "/default-teacher.jpg"}
-        alt={course.instructor}
-        style={{
-          width: "60px",
-          height: "60px",
-          borderRadius: "50%",
-          marginRight: "15px",
-        }}
-      />
-      <div>
-        <strong>{course.instructor || "Chưa cập nhật"}</strong>
-        <p style={{ color: "#555" }}>Giảng viên hướng dẫn chính</p>
-      </div>
-    </div>
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
-    <h2>Đánh giá học viên</h2>
-    {course.reviews && course.reviews.length > 0 ? (
-      course.reviews.map((review, i) => (
-        <div
-          key={i}
-          style={{
-            background: "#f9fafb",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            marginBottom: "10px",
-          }}
-        >
-          <p>
-            <strong>{review.user}</strong> — ⭐ {review.stars}/5
-          </p>
-          <p>{review.comment}</p>
+  if (loading && courses.length === 0) {
+    return (
+      <div className="courses-container">
+        <div className="loading-container">
+          <div className="loading-spinner">⏳ Đang tải khóa học...</div>
         </div>
-      ))
-    ) : (
-      <p>Chưa có đánh giá nào.</p>
-    )}
+      </div>
+    );
+  }
 
-    <button
-      onClick={() => navigate(-1)}
-      style={{
-        marginTop: "30px",
-        padding: "10px 20px",
-        backgroundColor: "#3b82f6",
-        color: "white",
-        border: "none",
-        borderRadius: "8px",
-        cursor: "pointer",
-      }}
-    >
-      ⬅ Quay lại Dashboard
-    </button>
-  </div>
-</div>
+  return (
+    <div className="courses-container">
+      {/* Header */}
+      <header className="courses-header">
+        <div className="header-content">
+          <h1 className="page-title">📚 Khóa học</h1>
+          <p className="page-subtitle">Khám phá và học tập cùng các khóa học chất lượng</p>
+        </div>
+      </header>
 
+      {/* Search and Filter */}
+      <div className="courses-controls">
+        <form onSubmit={handleSearch} className="search-form">
+          <input
+            type="text"
+            placeholder="Tìm kiếm khóa học..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          <button type="submit" className="search-btn">🔍 Tìm kiếm</button>
+        </form>
 
-);
+        <div className="filter-tabs">
+          <button
+            className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
+            onClick={() => { setFilter('all'); setCurrentPage(1); }}
+          >
+            Tất cả khóa học
+          </button>
+          <button
+            className={`filter-tab ${filter === 'my-courses' ? 'active' : ''}`}
+            onClick={() => { setFilter('my-courses'); setCurrentPage(1); }}
+          >
+            Khóa của tôi
+          </button>
+        </div>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="error-message">
+          ❌ {error}
+          <button onClick={fetchCourses} className="retry-btn">Thử lại</button>
+        </div>
+      )}
+
+      {/* Courses Grid */}
+      {courses.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">📭</div>
+          <h3>Không tìm thấy khóa học nào</h3>
+          <p>Hãy thử tìm kiếm với từ khóa khác</p>
+        </div>
+      ) : (
+        <>
+          <div className="courses-grid">
+            {courses.map((course) => (
+              <div key={course._id} className="course-card">
+                <div className="course-image-wrapper">
+                  <img
+                    src={course.thumbnailUrl || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&fit=crop'}
+                    alt={course.title}
+                    className="course-image"
+                  />
+                  {course.enrollment && (
+                    <div className="course-badge">
+                      ✓ Đã đăng ký
+                    </div>
+                  )}
+                </div>
+
+                <div className="course-content">
+                  <h3 className="course-title">{course.title}</h3>
+                  <p className="course-description">
+                    {course.description?.substring(0, 100)}
+                    {course.description?.length > 100 && '...'}
+                  </p>
+
+                  <div className="course-meta">
+                    <div className="meta-item">
+                      <span className="meta-icon">👨‍🏫</span>
+                      <span className="meta-text">
+                        {course.instructor?.fullName || 'Giảng viên'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <span className="meta-icon">👥</span>
+                      <span className="meta-text">
+                        {course.enrolledStudents?.length || 0} học viên
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <span className="meta-icon">📖</span>
+                      <span className="meta-text">
+                        {course.lessons?.length || 0} bài học
+                      </span>
+                    </div>
+                  </div>
+
+                  {course.enrollment ? (
+                    <div className="course-progress">
+                      <div className="progress-header">
+                        <span>Tiến độ</span>
+                        <span className="progress-percent">
+                          {course.enrollment.progress}%
+                        </span>
+                      </div>
+                      <div className="progress-bar">
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${course.enrollment.progress}%` }}
+                        ></div>
+                      </div>
+                      <button className="btn-continue">
+                        Tiếp tục học →
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="btn-enroll"
+                      onClick={() => handleEnroll(course._id)}
+                      disabled={enrolling === course._id}
+                    >
+                      {enrolling === course._id ? 'Đang đăng ký...' : '📝 Đăng ký ngay'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {filter !== 'my-courses' && totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                ← Trước
+              </button>
+
+              <div className="page-numbers">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNum = index + 1;
+                  // Show first page, last page, current page, and pages around current
+                  if (
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={pageNum}
+                        className={`page-num ${currentPage === pageNum ? 'active' : ''}`}
+                        onClick={() => handlePageChange(pageNum)}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  } else if (
+                    pageNum === currentPage - 2 ||
+                    pageNum === currentPage + 2
+                  ) {
+                    return <span key={pageNum} className="page-dots">...</span>;
+                  }
+                  return null;
+                })}
+              </div>
+
+              <button
+                className="page-btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Sau →
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 }

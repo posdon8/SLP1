@@ -5,6 +5,7 @@ export default function TeacherChatList({ courseId, userId, token, socket }) {
   const [conversations, setConversations] = useState([]);
   const [activeConvo, setActiveConvo] = useState(null);
 
+  // Lấy list conversations cho teacher
   useEffect(() => {
     const fetchConvos = async () => {
       try {
@@ -21,15 +22,23 @@ export default function TeacherChatList({ courseId, userId, token, socket }) {
   }, [courseId, token]);
 
   return (
-    <div style={{ display: "flex", gap: "20px" }}>
+    <div style={{ display: "flex", gap: "20px", marginTop:"10px" }}>
       {/* Left: danh sách học viên */}
-      <div style={{ width: "200px", borderRight: "1px solid #ccc" }}>
-        <h4>👨‍🏫 Học viên</h4>
-        <ul>
+      <div style={{ width: "200px", borderRight: "1px solid #ccc", maxHeight:"400px", overflowY:"auto" }}>
+        <ul style={{ listStyle: "none", padding: 0 }}>
           {conversations.map(c => {
             const student = c.members.find(m => m._id !== userId);
             return (
-              <li key={c._id} style={{ cursor: "pointer", padding: "5px" }} onClick={() => setActiveConvo(c)}>
+              <li
+                key={c._id}
+                style={{
+                  cursor: "pointer",
+                  padding: "5px 10px",
+                  backgroundColor: activeConvo?._id===c._id ? "#e0e0e0" : "transparent",
+                  borderBottom: "1px solid #ddd"
+                }}
+                onClick={() => setActiveConvo(c)}
+              >
                 {student?.fullName || "Unknown"}
               </li>
             );
