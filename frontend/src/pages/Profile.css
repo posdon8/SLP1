@@ -1,0 +1,465 @@
+/* Profile.css - Avatar Upload Section */
+
+.profile-page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ============ AVATAR SECTION ============ */
+.avatar-section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 4px solid #ff9100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  background-color: #f0f0f0;
+  display: block;
+  flex-shrink: 0;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+/* ✅ Avatar Upload Label */
+.avatar-upload-label {
+  position: absolute;
+  bottom: 0;
+  right: 50%;
+  transform: translateX(calc(150px / 2 + 10px));
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  
+  width: 60px;
+  height: 60px;
+  background: rgb(168, 168, 168);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(175, 139, 76, 0.3);
+  transition: all 0.3s;
+  border: 3px solid white;
+}
+
+.avatar-upload-label:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+  transform: translateX(calc(150px / 2 + 10px)) scale(1.1);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+}
+
+.avatar-upload-label:active {
+  transform: translateX(calc(150px / 2 + 10px)) scale(0.95);
+}
+
+.avatar-file-input {
+  display: none;
+}
+
+.upload-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.upload-text {
+  font-size: 10px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.avatar-upload-label:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============ FORM INPUTS ============ */
+.profile-card input {
+  width: 100%;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.profile-card input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 8px rgba(25, 118, 210, 0.1);
+  background-color: #f9f9f9;
+}
+
+/* ============ PROFILE INFO ============ */
+.profile-card h2 {
+  color: #1976d2;
+  font-size: 28px;
+  margin: 20px 0 10px;
+  text-align: center;
+}
+
+.profile-card p {
+  color: #555;
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 8px 0;
+}
+
+.profile-card strong {
+  color: #333;
+}
+
+/* ============ BUTTONS ============ */
+.profile-buttons {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.save-btn,
+.edit-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+}
+
+.save-btn:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  transform: translateY(-2px);
+}
+
+.save-btn:active {
+  transform: translateY(0);
+}
+
+.cancel-btn,
+.edit-btn {
+  padding: 12px 20px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 2px solid #e0e0e0;
+}
+
+.cancel-btn:hover,
+.edit-btn:hover {
+  background-color: #e0e0e0;
+  border-color: #999;
+}
+
+.edit-btn {
+  flex: none;
+  width: auto;
+  display: block;
+  margin: 20px auto 0;
+}
+
+/* ============ MESSAGES ============ */
+.profile-error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c62828;
+}
+
+.success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #4caf50;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.profile-loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============ STATS SECTIONS ============ */
+.teacher-stats,
+.student-stats {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.teacher-stats h3,
+.student-stats h3 {
+  color: #72120d;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+/* Level/Tier Badge */
+.level-badge,
+.tier-badge {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  border-left: 4px solid;
+  margin-bottom: 20px;
+}
+
+.level-icon {
+  font-size: 32px;
+}
+
+.level-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.level-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+}
+
+.level-desc {
+  font-size: 13px;
+  color: #666;
+}
+
+.tier-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 18px;
+}
+
+.discount-badge {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.stat-label {
+  display: block;
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  display: block;
+  color: #67320e;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.rating-stars {
+  display: block;
+  color: #ffc107;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Progress Bars */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: rgb(150, 77, 4);
+  transition: width 0.3s;
+}
+
+.progress-text {
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Requirements Grid */
+.requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.requirement-item {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s;
+  text-align: center;
+ 
+}
+
+.requirement-item.eligible {
+  background-color: #e8f5e9;
+  border-color: #ff8c00;
+}
+
+.level-badge-small,
+.tier-badge-small {
+  display: inline-block;
+  background-color: #1976d2;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+
+}
+
+.eligible-badge {
+  display: inline-block;
+  background-color: #4caf50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 20px;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .avatar-upload-label {
+    width: 50px;
+    height: 50px;
+    transform: translateX(calc(120px / 2 + 8px));
+  }
+
+  .avatar-upload-label:hover {
+    transform: translateX(calc(120px / 2 + 8px)) scale(1.1);
+  }
+
+  .profile-buttons {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .requirements-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .level-badge,
+  .tier-badge {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-card h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .avatar-upload-label {
+    width: 45px;
+    height: 45px;
+    transform: translateX(calc(100px / 2 + 5px));
+  }
+
+  .avatar-upload-label:hover {
+    transform: translateX(calc(100px / 2 + 5px)) scale(1.1);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card h2 {
+    font-size: 20px;
+  }
+}

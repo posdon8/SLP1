@@ -1,0 +1,367 @@
+/* =========================
+   CART CONTAINER
+========================= */
+.cart-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #222;
+}
+
+/* =========================
+   EMPTY CART
+========================= */
+.empty-cart {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.empty-cart h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.empty-cart p {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+/* =========================
+   HEADER
+========================= */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.cart-header h1 {
+  font-size: 26px;
+}
+
+.btn-clear {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-clear:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   CART ITEMS
+========================= */
+.cart-items {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.items-header {
+  display: grid;
+  grid-template-columns: 1fr 120px 40px;
+  font-weight: 600;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 1fr 120px 40px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.item-thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f3f4f6;
+}
+
+.item-details h3 {
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+
+.teacher-name {
+  font-size: 13px;
+  color: #666;
+}
+
+.item-price {
+  font-weight: 600;
+  text-align: right;
+}
+
+.btn-remove {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #dc2626;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  opacity: 0.7;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+.cart-summary {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  height: fit-content;
+}
+
+.cart-summary h2 {
+  margin-bottom: 16px;
+}
+
+/* =========================
+   SUMMARY ROWS
+========================= */
+.summary-section {
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.price-original {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.discount-row {
+  color: #cc1f00;
+}
+
+.price-discount {
+  font-weight: 600;
+}
+
+.summary-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+}
+
+.final-price {
+  font-size: 18px;
+}
+
+.price-final {
+  color: #2563eb;
+}
+
+.savings-text {
+  margin-top: 8px;
+  color: #cc1f00;
+  font-size: 16px;
+  margin-left: 70px;
+}
+
+/* =========================
+   VOUCHER SECTION
+========================= */
+.voucher-section {
+  margin-bottom: 20px;
+}
+
+.voucher-section h3 {
+  margin-bottom: 10px;
+}
+
+.voucher-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.voucher-input-group input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.voucher-input-group input:disabled {
+  background: #f3f4f6;
+}
+
+.btn-apply-voucher {
+  background: #f18101;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-apply-voucher:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-voucher-applied {
+  background: #df9306;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.voucher-error {
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+/* =========================
+   AVAILABLE COUPONS
+========================= */
+.available-coupons {
+  margin-top: 12px;
+}
+
+.btn-show-coupons {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.coupon-badge {
+  background: #2563eb;
+  color: #fff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.voucher-dropdown {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.voucher-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.voucher-item:hover {
+  background: #f9fafb;
+}
+
+.coupon-code {
+  font-weight: 700;
+}
+
+.coupon-detail {
+  font-size: 13px;
+  color: #555;
+}
+
+/* =========================
+   CHECKOUT
+========================= */
+.btn-checkout {
+  width: 100%;
+  background: #864100f8;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-checkout:hover {
+  background: #e95f03;
+}
+
+.checkout-note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+.voucher-section {
+  position: relative;
+}
+
+.voucher-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}

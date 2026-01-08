@@ -1,0 +1,278 @@
+.course-file {
+  max-width: 800px;
+  margin: 30px auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2px;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Form thêm tài liệu --- */
+.course-file form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.course-file input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.course-file input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.course-file button {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.course-file button:hover {
+  background-color: #0056b3;
+}
+
+/* --- Danh sách tài liệu --- */
+.course-resources {
+  border-top: 1px solid #ffffff;
+  margin-top: -15px;
+  margin-left: -10px;
+}
+
+.course-resources h3 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #333;
+
+}
+
+.course-resources ul {
+  list-style: none;
+  padding: 0;
+}
+
+.course-resources li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.course-resources li:hover {
+  background: #f1f7ff;
+}
+
+/* --- Link tài liệu --- */
+.course-resources a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.course-resources a:hover {
+  text-decoration: underline;
+}
+
+/* --- Nút xóa --- */
+.delete-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.25s ease;
+}
+
+.delete-btn:hover {
+  background: #d9363e;
+}
+.file-drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.file-drop-zone:hover {
+  border-color: #0077ff;
+  background: #eff6ff;
+}
+
+.file-drop-zone.dragging {
+  border-color: #10b981;
+  background: #ecfdf5;
+  border-width: 3px;
+}
+
+.file-drop-zone.uploading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.drop-icon {
+  font-size: 32px;
+}
+
+.drop-text {
+  color: #666;
+  font-weight: 500;
+}
+
+.file-preview {
+  background: #e8f5e9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-preview p {
+  margin: 0;
+  color: #2e7d32;
+}
+
+.btn-remove {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-remove:hover {
+  background: #cc0000;
+}
+
+.add-resource-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.add-resource-form input,
+.add-resource-form button {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.add-resource-form input {
+  border: 1px solid #ddd;
+}
+
+.add-resource-form input:focus {
+  outline: none;
+  border-color: #0077ff;
+  box-shadow: 0 0 4px rgba(0,119,255,0.3);
+}
+
+.add-resource-form button {
+  background: #0077ff;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.add-resource-form button:hover:not(:disabled) {
+  background: #005ae0;
+}
+
+.add-resource-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.resources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.resource-link {
+  flex: 1;
+  color: #0077ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.resource-link:hover {
+  text-decoration: underline;
+}
+
+.resource-type {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn-delete-resource {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #d32f2f;
+  transition: 0.3s;
+}
+
+.btn-delete-resource:hover {
+  color: #b71c1c;
+  transform: scale(1.2);
+}
+
+.empty-resources {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}

@@ -1,0 +1,653 @@
+/* ========== Container ========== */
+.lesson-tab {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.lesson-tab h3 {
+  color: #000408;
+  margin-bottom: 20px;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+/* ========== Add Section ========== */
+.add-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.add-section input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 15px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.add-section input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.add-section button {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.add-section button:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Section ========== */
+.section {
+  background: #ececec ;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.section:hover {
+  background: #b65d050e;
+  transform: translateY(-1.5px);
+}
+
+/* ========== Section Header ========== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background:  #ececec ;
+  color: rgb(12, 0, 0);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  height: 45px;
+}
+
+.section-header span:first-child {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-header span:last-child {
+  background: rgba(134, 64, 64, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.delete-section-btn {
+  padding: 6px 12px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.delete-section-btn:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+/* ========== Lesson List ========== */
+.lesson-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f9fafb;
+}
+
+/* ========== Lesson Item ========== */
+.lesson-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e6ed;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.lesson-item:last-child {
+  border-bottom: none;
+}
+
+.lesson-item:hover {
+  background: #f0f4f8;
+}
+
+.lesson-item.active {
+  background: #e3f2fd;
+  border-left: 4px solid #007bff;
+  padding-left: 16px;
+}
+
+.lesson-item > div:first-child {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.lesson-time {
+  background: #e9ecefa6;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #495057;
+  font-weight: 600;
+}
+
+/* ========== Lesson Actions ========== */
+.lesson-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background: #ffc107;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #e0a800;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+/* ========== Add Lesson Form ========== */
+.lesson-add {
+  padding: 20px !important;
+  background: #f0f4f8 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom: none !important;
+}
+
+.lesson-type-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lesson-type-select label {
+  font-weight: 600;
+  color: #2c3e50;
+  min-width: 100px;
+}
+
+.lesson-type-select select,
+.quiz-select select {
+  flex: 1;
+  padding: 10px 15px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lesson-type-select select:focus,
+.quiz-select select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.lesson-add input[type="text"],
+.lesson-add input[type="number"] {
+  padding: 10px 15px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.lesson-add input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* ========== Video Drop Zone ========== */
+.video-drop-zone {
+  border: 3px dashed #007bff;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  background: #f0f7ff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #495057;
+}
+
+.video-drop-zone:hover {
+  border-color: #0056b3;
+  background: #e7f3ff;
+}
+
+.video-drop-zone.dragging {
+  border-color: #28a745;
+  background: #f0fff4;
+  transform: scale(1.02);
+}
+
+.video-drop-zone.uploading {
+  border-color: #ffc107;
+  background: #fffbf0;
+  opacity: 0.8;
+}
+
+.drop-icon {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.drop-text {
+  display: block;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.video-selected {
+  display: block;
+  color: #28a745;
+  font-size: 13px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* ========== Quiz Select ========== */
+.quiz-select {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.warning {
+  color: #dc3545;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  padding: 8px 12px;
+  background: #fff5f5;
+  border-left: 3px solid #dc3545;
+  border-radius: 4px;
+}
+
+.lesson-add button {
+  align-self: flex-start;
+  padding: 10px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.lesson-add button:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Modal Overlay ========== */
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.video-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  background: #c82333;
+  transform: rotate(90deg);
+}
+
+.video-modal-content h2,
+.video-modal-content h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.video-modal-content > input[type="text"],
+.video-modal-content > input[type="number"],
+.video-modal-content > select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.video-modal-content > input:focus,
+.video-modal-content > select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* ========== Video Modal ========== */
+.lesson-video-modal {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.video-duration {
+  color: #666;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+  font-weight: 600;
+}
+
+/* ========== File Preview ========== */
+.file-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  padding: 30px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.file-preview p {
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.download-btn {
+  padding: 12px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Quiz Preview ========== */
+.quiz-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  padding: 30px;
+  background: #f0f7ff;
+  border-radius: 8px;
+  border: 2px solid #007bff;
+}
+
+.quiz-preview p {
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.quiz-btn {
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.quiz-btn:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Edit Actions ========== */
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.edit-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.edit-actions button:first-child {
+  background: #28a745;
+  color: white;
+}
+
+.edit-actions button:first-child:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.edit-actions button:last-child {
+  background: #dc3545;
+  color: white;
+}
+
+.edit-actions button:last-child:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .lesson-tab {
+    padding: 15px;
+  }
+
+  .add-section {
+    flex-direction: column;
+  }
+
+  .add-section input {
+    min-width: 100%;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .delete-section-btn {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+
+  .lesson-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lesson-actions {
+    margin-left: 0;
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+
+  .video-modal-content {
+    max-width: 95%;
+    padding: 20px;
+  }
+
+  .lesson-add {
+    padding: 15px !important;
+  }
+}.section-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 10px;
+}
+.image {
+  height: 16px !important;
+  margin-right: 8px;
+  
+}
+.edit-section-btn {
+  padding: 6px 12px;
+  background: #ffc107;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.edit-section-btn:hover {
+  background: #e0a800;
+  transform: scale(1.05);
+}
+
+.edit-section-btn.active {
+  background: #28a745;
+}

@@ -1,0 +1,71 @@
+.role-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.role-modal {
+  background: #fff;
+  width: 420px;
+  max-width: 90%;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: scaleIn 0.25s ease;
+  outline: none;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.responsibility-box {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #ffc1b6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.benefits-list {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #fafbfc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.responsibility-box h4 {
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #1f2937;
+}
+.benefits-list li {
+  margin-bottom: 4px;
+  color: #374151;
+}
+.responsibility-box ul {
+  padding-left: 18px;
+  margin-bottom: 8px;
+}
+
+.responsibility-box li {
+  margin-bottom: 4px;
+  color: #374151;
+}
+
+.responsibility-note {
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}

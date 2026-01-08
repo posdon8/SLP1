@@ -1,0 +1,121 @@
+/* ===== Notification Bell ===== */
+.notification-bell {
+  position: relative;
+  display: inline-block;
+}
+
+.bell-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+.bell-icon:hover {
+  color: #f8560b;
+}
+
+/* ===== Badge ===== */
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+/* ===== Dropdown ===== */
+.dropdown {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  width: 320px;
+  max-height: 420px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* ===== Title ===== */
+.dropdown-title {
+  margin: 0;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+}
+
+/* ===== Empty ===== */
+.empty {
+  padding: 16px;
+  text-align: center;
+  color: #777;
+}
+
+/* ===== Notification List ===== */
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+/* ===== Item ===== */
+.notification-item {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+  background: #f9f9f9;
+}
+
+/* ===== Unread ===== */
+.notification-item.unread {
+  background: #fff7f3;
+}
+
+.notification-item.unread .message {
+  font-weight: 600;
+}
+
+/* ===== Content ===== */
+.sender {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.message {
+  font-size: 13px;
+  margin: 4px 0;
+  color: #333;
+}
+
+.notification-item small {
+  font-size: 11px;
+  color: #888;
+}
+
+/* ===== Scrollbar ===== */
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}

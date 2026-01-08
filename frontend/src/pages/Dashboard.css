@@ -1,0 +1,472 @@
+/* ==========================================
+   CSS VARIABLES
+   ========================================== */
+:root {
+  /* Colors */
+  --primary: #0c1781;
+  --primary-light: #072474;
+  --success: #4caf50;
+  --trending: #ff6b6b;
+  --warning: #ffc107;
+  --text-dark: #222;
+  --text-gray: #555;
+  --text-light: #777;
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --border-color: #eee;
+
+  /* Spacing */
+  --sp-xs: 8px;
+  --sp-sm: 12px;
+  --sp-md: 20px;
+  --sp-lg: 40px;
+  --sp-xl: 60px;
+
+  /* Sizing */
+  --radius: 12px;
+  --radius-sm: 6px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+  /* Transitions */
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================
+   BASE STYLES
+   ========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* ==========================================
+   DASHBOARD CONTAINER
+   ========================================== */
+.dashboard-container {
+  padding: var(--sp-lg) var(--sp-xl);
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+.welcome-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  
+}
+.welcome-user h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #b53101;
+  font-size: 1.4rem;
+}
+
+
+.user-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e5e7eb;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.user-name {
+  font-weight: 700;
+  color: #111827;
+}
+.dashboard-header {
+  
+  margin-bottom: var(--sp-lg);
+  margin-top: -var(--sp-sm);
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.dashboard-header h2 {
+  font-size: 1.2rem !important;
+  font-weight: 700;
+ 
+  letter-spacing: -0.5px;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   FILTER SECTION
+   ========================================== */
+.dashboard-filter {
+  display: flex;
+  justify-content: center;
+  margin: var(--sp-md) 0 var(--sp-lg);
+  gap: 12px;
+
+}
+.dashboard-hero {
+  grid-template-columns: 1fr 1fr;
+  gap: 0px;
+  margin: 45px 0 32px;
+  font-size: 1.0rem;
+  font-weight: 800 !important ;
+}
+.hero-image {
+  height: 340px;
+  margin-top: 20px;
+}
+/* Banner */
+.hero-banner
+ {
+  height: 340px;
+  width: 70%;
+  overflow: hidden;
+  margin-top: 20px;
+  border-radius: 20px;
+}
+
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+@media (max-width: 1024px) {
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image,
+  .hero-banner {
+    height: 280px;
+  }
+}
+
+.dashboard-filter select {
+  width: 280px;
+  padding: var(--sp-sm) var(--sp-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: var(--bg-white);
+  color: var(--text-dark);
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition);
+}
+
+.dashboard-filter select:hover,
+.dashboard-filter select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(12, 23, 129, 0.1);
+}
+
+/* ==========================================
+   COURSE SECTION
+   ========================================== */
+.course-section {
+  margin-bottom: var(--sp-xl);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 800 !important ;
+  margin-bottom: var(--sp-md);
+  padding-bottom: var(--sp-sm);
+  padding-left: var(--sp-md);
+  border-bottom: 3px solid;
+  letter-spacing: 0.5px;
+}
+
+.section-title.trending {
+  border-color:#f8560bda;
+  border-width: 0.07cm;
+}
+
+.section-title.free {
+  border-color:#b1a373da;
+ border-width: 0.07cm;
+}
+
+.section-title.paid {
+  border-color:#ffe600;
+  border-width: 0.07cm;
+}
+
+/* ==========================================
+   COURSE GRID
+   ========================================== */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: var(--sp-lg);
+}
+
+/* ==========================================
+   COURSE CARD
+   ========================================== */
+.course-card {
+  background: var(--bg-white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 330px;
+  border: 1px solid transparent;
+
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Image */
+.course-card img {
+  width: 100%;
+  height: 152px !important;
+  object-fit: cover;
+  transition: var(--transition);
+}
+
+
+
+.course-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 8px var(--sp-md) 4px;
+  color: #111827;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;      /* 👈 tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  min-height: calc(1.4em * 1.9); /* 👈 khóa chiều cao đúng 2 dòng */
+}
+
+
+.teacher-name {
+  font-size: 0.9rem !important;
+  color: var(--text-light) !important;
+  margin: 0 var(--sp-md) -20px !important;
+  font-weight: 500;
+}
+
+.category-tags {
+  font-size: 0.85rem !;
+  color: var(--text-light) !important;
+  margin: 0 var(--sp-md) !important;
+  line-height: 1.3;
+}
+
+.course-card .category-tag {
+  display: inline-block;
+  margin: 0 var(--sp-md) var(--sp-sm);
+  padding: 4px var(--sp-sm);
+  background: rgba(12, 23, 129, 0.1);
+  color: var(--primary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  
+}
+
+/* Footer */
+.course-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: var(--sp-sm) var(--sp-md);
+  padding-top: var(--sp-sm);
+  border-top: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0px; 
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.price {
+  color:#f05123 !important;
+  font-size: 1.2rem !important;
+  font-weight: 700;
+  margin: 0 var(--sp-md) !important;
+}
+.no-price {
+  color:#f05123 !important;
+  font-size: 1.1rem !important;
+  font-weight: 640;
+  margin: 0 var(--sp-md) !important;
+}
+
+/* Student count */
+.student-count {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin: 0 var(--sp-md) var(--sp-sm);
+  font-weight: 500;
+}
+.student-count img{
+  height: 12px !important;
+  width: 12px !important;
+  margin-left:  -25% !important;
+  margin-bottom: -2% ;
+  margin-right: 13% !important;
+}
+/* ==========================================
+   BADGES
+   ========================================== */
+.enrolled-badge,
+.status-owner {
+  position: absolute;
+  top: var(--sp-md);
+  left: var(--sp-md);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.enrolled-badge {
+  background: rgb(234, 229, 226);
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+.enrolled-badge img{
+  height: 15px !important;
+}
+.status-owner {
+  background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  color: #333;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+/* ==========================================
+   EMPTY STATE
+   ========================================== */
+.no-course {
+  color: var(--text-light);
+  font-style: italic;
+  text-align: center;
+  padding: var(--sp-xl) 0;
+  font-size: 1rem;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 1200px) {
+  .dashboard-container {
+    padding: var(--sp-lg) var(--sp-lg);
+  }
+
+  .course-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--sp-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: var(--sp-lg) var(--sp-md);
+  }
+
+ 
+
+  .dashboard-filter select {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    z-index: 999;
+  }
+
+  .course-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--sp-md);
+  }
+
+  .course-card {
+    height: 320px;
+  }
+
+  .course-card img {
+    height: 140px;
+  }
+
+  .course-card h3 {
+    font-size: 1.1rem;
+    margin: var(--sp-sm);
+  }
+}
+.title {
+  margin-bottom: 5px !important;
+}
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: var(--sp-md);
+  }
+
+  .dashboard-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .course-grid {
+    grid-template-columns: 1fr;
+  }
+
+  
+  .course-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-sm);
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin-bottom: var(--sp-md);
+  }
+}

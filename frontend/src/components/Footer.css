@@ -1,0 +1,251 @@
+.site-footer {
+  background: #1e1e2f;
+  color: #fff;
+  padding: 40px 20px 20px;
+  margin-top: 60px;
+}
+
+.footer-container {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: auto;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 260px;
+}
+
+.footer-section h4 {
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.footer-section p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #ffffffa2;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+.feedback-form textarea {
+  resize: none;
+  height: 80px;
+}
+
+.feedback-form button {
+  background: #f1c40f;
+  color: #000;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.feedback-form button:hover {
+  background: #f39c12;
+}
+
+.footer-bottom {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 13px;
+  color: #bbb;
+}
+* ============ FEEDBACK FORM ============ */
+.feedback-section {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  border-left: 4px solid #4CAF50;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feedback-form input[type="email"],
+.feedback-form input[type="text"],
+.feedback-form textarea,
+.feedback-form select {
+  padding: 10px 12px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.feedback-form input[type="email"]::placeholder,
+.feedback-form input[type="text"]::placeholder,
+.feedback-form textarea::placeholder {
+  color: #999;
+}
+
+.feedback-form input[type="email"]:focus,
+.feedback-form input[type="text"]:focus,
+.feedback-form textarea:focus,
+.feedback-form select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  background-color: #3a3a3a;
+}
+
+.feedback-form select {
+  cursor: pointer;
+  appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 35px;
+}
+
+.feedback-select,
+.rating-select {
+  width: 100%;
+}
+
+/* Rating Section */
+.rating-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.rating-input label {
+  font-weight: 500;
+  min-width: 70px;
+  color: #ddd;
+}
+
+.rating-select {
+  flex: 1;
+}
+
+/* Textarea */
+.feedback-form textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Buttons */
+.submit-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.submit-btn:disabled {
+  background: #f1f1f1;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(76, 175, 80, 0.2);
+}
+
+/* Messages */
+.success-message,
+.error-message {
+  padding: 12px 15px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.success-message {
+  background-color: #4CAF50;
+  color: white;
+  border-left: 4px solid #388E3C;
+}
+
+.error-message {
+  background-color: #f44336;
+  color: white;
+  border-left: 4px solid #d32f2f;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-form {
+    gap: 10px;
+  }
+
+  .rating-input {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rating-select {
+    width: 100%;
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,209 @@
+/* src/styles/AddCourseForm.module.css */
+
+.addCourseForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.addCourseForm h3 {
+  margin: 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+/* ===== INPUT STYLES ===== */
+.addCourseForm input,
+.addCourseForm textarea,
+.addCourseForm select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.addCourseForm input:focus,
+.addCourseForm textarea:focus,
+.addCourseForm select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.addCourseForm textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ===== CATEGORY GROUP ===== */
+.categoryGroup {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
+
+.categoryGroup p {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.categoryCheckbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.categoryCheckbox:last-child {
+  margin-bottom: 0;
+}
+
+.categoryCheckbox input {
+  margin-right: 8px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.categoryCheckbox:hover {
+  color: #007bff;
+}
+
+/* ===== DRAG & DROP ZONE ===== */
+.thumbnailDropZone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  margin: 15px 0;
+}
+
+.thumbnailDropZone:hover {
+  border-color: #007bff;
+  background-color: #f0f7ff;
+}
+
+.thumbnailDropZone.dragging {
+  border-color: #28a745;
+  background-color: #e8f5e9;
+  transform: scale(1.02);
+}
+
+.dropLabel {
+  cursor: pointer;
+  display: block;
+  color: #333;
+  font-weight: 500;
+}
+
+.dropIcon {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.dropText {
+  font-size: 14px;
+}
+
+.uploadingText {
+  font-size: 16px;
+  color: #666;
+}
+
+/* ===== THUMBNAIL PREVIEW ===== */
+.thumbnailPreview {
+  margin: 15px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+.thumbnailPreview img {
+  width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+}
+
+.removeBtn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.removeBtn:hover {
+  background-color: #cc0000;
+}
+
+/* ===== BUTTON ===== */
+.submitBtn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.submitBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* ===== LABEL STYLES ===== */
+.addCourseForm label {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+}
+
+.addCourseForm label select {
+  margin-left: 10px;
+  flex: 1;
+}
+
+.urlLabel {
+  font-size: 0.9em;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+}
+
+.urlLabel input {
+  margin-top: 5px;
+}
+
+/* ===== HIDDEN INPUT ===== */
+.hiddenInput {
+  display: none;
+}

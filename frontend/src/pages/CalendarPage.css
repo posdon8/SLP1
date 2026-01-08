@@ -1,0 +1,272 @@
+/* CalendarPage.css - Toàn bộ styling cho Calendar Page */
+
+/* ==================== CALENDAR PAGE CONTAINER ==================== */
+.calendar-page {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.calendar-page h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+/* ==================== CALENDAR STYLING ==================== */
+.react-calendar {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.react-calendar__tile {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+/* ==================== INDICATORS / TAGS ==================== */
+/* Dot container - chứa chấm dưới ngày */
+.dot-container {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+}
+
+/* Single dot - chấm nhỏ khi có 1 event */
+.dot-item {
+  width: 5px;
+  height: 5px;
+  background-color: #ff6b6b;
+  border-radius: 50%;
+}
+
+/* Event count badge - vòng tròn số events (khi có > 1 event) */
+.event-count-badge {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff6b6b;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== MODAL STYLING ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 0px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 70vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+    overflow-x: hidden;
+}
+
+.modal h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 0px;
+  max-width: 600px;
+  margin-right: 0px;
+}
+
+/* ==================== EVENT ITEM STYLING ==================== */
+.event-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: #fafafa;
+  flex-shrink: 0;
+}
+
+.event-header {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+/* ==================== BADGE STYLING ==================== */
+/* Badge - label trên event item (Course / Quiz) */
+.badge {
+  display: inline-block;
+  padding: 5px 5px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: rgb(66, 64, 64);
+  white-space: nowrap;
+  left: 20px;
+  margin-bottom: 10px;
+  width: auto;
+  height: auto;
+}
+
+.badge.course {
+  background-color: #dbdbdb;
+
+}
+
+.badge.quiz {
+  background-color: #dbdbdb;
+}
+
+/* ==================== STATUS BADGE ==================== */
+/* Status - trạng thái (Open / Upcoming / Closed) */
+.status {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.status.Open {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status.Upcoming {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status.Closed {
+  background-color: #f44336;
+  color: white;
+}
+
+.status.AlwaysOpen {
+  background-color: #2196f3;
+  color: white;
+}
+
+/* ==================== EVENT DETAILS ==================== */
+.event-item h4 {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.event-item p {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.event-item .time {
+  color: #ff6b6b;
+  font-weight: 500;
+}
+
+/* ==================== BUTTONS ==================== */
+/* Event action button */
+.event-item button {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 8px;
+  transition: background-color 0.3s;
+}
+
+.event-item button:hover {
+  background-color: #1565c0;
+}
+
+/* Close button - fixed ở dưới modal */
+.close-btn {
+  width: 10%;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+  transform: none;
+}
+
+.close-btn:hover {
+  background-color: #e0e0e0;
+  transform: none;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 600px) {
+  .calendar-page {
+    padding: 10px;
+  }
+
+  .calendar-page h2 {
+    font-size: 20px;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .event-item {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .event-header {
+    gap: 8px;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+
+  .status {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
