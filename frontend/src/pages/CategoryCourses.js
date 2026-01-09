@@ -18,7 +18,7 @@ export default function CategoryCourses() {
   const BASE_URL = API_URL.replace("/api", ""); // http://localhost:5000
   /* ===================== LOAD COURSES BY CATEGORY ===================== */
   useEffect(() => {
-    fetch(`http://localhost:5000/api/courses?categorySlug=${slug}`)
+    fetch(`${API_URL}/courses?categorySlug=${slug}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -30,7 +30,7 @@ export default function CategoryCourses() {
       .finally(() => setLoading(false));
   }, [slug]);
 useEffect(() => {
-  fetch("http://localhost:5000/api/categories")
+  fetch(`${API_URL}/categories`)
     .then((res) => res.json())
     .then((data) => {
       if (data.success) {
@@ -44,7 +44,7 @@ useEffect(() => {
   useEffect(() => {
     if (isTeacher || !token) return;
 
-    fetch("http://localhost:5000/api/courses/my-enrolled-courses", {
+    fetch(`${API_URL}/api/courses/my-enrolled-courses`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())

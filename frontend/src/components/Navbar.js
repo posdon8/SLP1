@@ -323,7 +323,7 @@ const fetchCategories = async () => {
             </button>
           )}
           {user?.roles?.includes("admin") && (
-
+            <>
             <button
               className="icon voucher"
               onClick={() => navigate("/voucher")}
@@ -335,6 +335,10 @@ const fetchCategories = async () => {
                 style={{ height: "30px", background: "white" }}
               />
             </button>
+            <button
+              className="icon voucher"
+              onClick={() => navigate("/admin/users")}
+            >asd</button></>
           )}
 
           {user && (
