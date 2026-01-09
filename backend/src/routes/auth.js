@@ -14,12 +14,16 @@ const verificationCodes = new Map();
 
 // ⭐ Setup Nodemailer
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
-    user: process.env.EMAIL_USER,  // example@gmail.com
-    pass: process.env.EMAIL_PASSWORD  // app password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
   }
 });
+
 const generateCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
