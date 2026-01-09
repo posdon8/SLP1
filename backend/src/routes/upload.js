@@ -6,7 +6,7 @@ const { authMiddleware } = require("../middleware/auth");
 const User = require("../models/User");
 const { resizeAvatar } = require("../middleware/imageResize");
 
-const API_URL = process.env.API_URL || "http://localhost:5000";
+const API_URL = process.env.BACKEND_URL || "http://localhost:5000";
 
 // ✅ POST upload video với error handling
 router.post("/video", authMiddleware, (req, res) => {
