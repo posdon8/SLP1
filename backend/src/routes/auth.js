@@ -12,20 +12,12 @@ const { authMiddleware } = require("../middleware/auth");
 
 const verificationCodes = new Map();
 
-/* ⭐ Setup Nodemailer
+// ⭐ Setup Nodemailer
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,  // example@gmail.com
     pass: process.env.EMAIL_PASSWORD  // app password
-  }
-}); */
-const transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
-  auth: {
-    user: "apikey",  // ⭐ Exact text, không phải email!
-    pass: process.env.SENDGRID_API_KEY
   }
 });
 const generateCode = () => {
@@ -54,7 +46,7 @@ router.post("/send-verification-code", async (req, res) => {
 
     // ⭐ Gửi email
     await transporter.sendMail({
-      from: "noreply@slp.com",
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "Mã xác thực SLP",
       html: `
@@ -208,7 +200,7 @@ router.post("/send-reset-code", async (req, res) => {
 
     // ⭐ Gửi email
     await transporter.sendMail({
-      from: "noreply@slp.com",
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "Mã đặt lại mật khẩu Udemy",
       html: `
@@ -315,7 +307,7 @@ router.post("/reset-password", async (req, res) => {
 
     // ⭐ Gửi email xác nhận
     await transporter.sendMail({
-      from: "noreply@slp.com",
+      from: process.env.EMAIL_USER,
       to: email,
       subject: " Mật khẩu đã được đặt lại thành công",
       html: `
@@ -495,7 +487,6 @@ router.post('/google-login', async (req, res) => {
     res.status(401).json({ error: 'Token Google không hợp lệ' });
   }
 });
-/*
 router.post('/google-login', async (req, res) => {
   const { tokenId } = req.body; // token từ frontend
   if (!process.env.GOOGLE_CLIENT_ID) {
@@ -548,7 +539,6 @@ router.post('/google-login', async (req, res) => {
     res.status(401).json({ error: 'Token Google không hợp lệ' });
   }
 });
-*/
 router.post("/add-teacher-role", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
