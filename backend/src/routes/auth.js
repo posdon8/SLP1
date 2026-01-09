@@ -54,7 +54,7 @@ router.post("/send-verification-code", async (req, res) => {
 
     // ⭐ Gửi email
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: "noreply@slp.com",
       to: email,
       subject: "Mã xác thực SLP",
       html: `
@@ -208,7 +208,7 @@ router.post("/send-reset-code", async (req, res) => {
 
     // ⭐ Gửi email
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: "noreply@slp.com",
       to: email,
       subject: "Mã đặt lại mật khẩu Udemy",
       html: `
@@ -315,7 +315,7 @@ router.post("/reset-password", async (req, res) => {
 
     // ⭐ Gửi email xác nhận
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: "noreply@slp.com",
       to: email,
       subject: " Mật khẩu đã được đặt lại thành công",
       html: `
