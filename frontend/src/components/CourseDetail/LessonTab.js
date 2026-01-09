@@ -54,7 +54,7 @@ export default function LessonTab({
 
   const fetchQuizzes = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/quiz/${course._id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/quiz/${course._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -111,7 +111,7 @@ export default function LessonTab({
 
     try {
       setUploadingSection(sectionId);
-      const response = await fetch("http://localhost:5000/api/upload/video", {
+      const response = await fetch( `${process.env.REACT_APP_API_URL}/upload/video`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -164,7 +164,7 @@ export default function LessonTab({
 
     try {
       setUploadingSection(sectionId);
-      const response = await fetch("http://localhost:5000/api/upload/file", {
+      const response = await fetch( `${process.env.REACT_APP_API_URL}/upload/file`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -264,13 +264,13 @@ export default function LessonTab({
   let icon;
   switch (lesson.type) {
     case "video":
-      icon = <img src="http://localhost:5000/uploads/images/play-button.png" className="image" alt="play" />;
+      icon = <img src= {`${process.env.REACT_APP_API_URL.replace("/api", "")}/uploads/images/play-button.png` } className="image" alt="play" />;
       break;
     case "file":
-      icon = <img src="http://localhost:5000/uploads/images/document1.png" className="image" alt="document" />;
+      icon = <img src= {`${process.env.REACT_APP_API_URL.replace("/api", "")}/uploads/images/document1.png`} className="image" alt="document" />;
       break;
     case "quiz":
-      icon = <img src="http://localhost:5000/uploads/images/question-sign.png" className="image" alt="quiz" />;
+      icon = <img src={`${process.env.REACT_APP_API_URL.replace("/api", "")}/uploads/images/question-sign.png`} className="image" alt="quiz" />;
       break;
     default:
       icon = <>📚</>;

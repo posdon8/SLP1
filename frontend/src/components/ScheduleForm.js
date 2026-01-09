@@ -36,7 +36,7 @@ export default function ScheduleForm({ ownerType, ownerId, onSaveSuccess }) {
         console.log(`📥 Fetching schedule: ${ownerType}/${ownerId}`);
         
         const res = await fetch(
-          `http://localhost:5000/api/schedules/${ownerType}/${ownerId}`,
+          `${process.env.REACT_APP_API_URL}/schedules/${ownerType}/${ownerId}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -109,7 +109,7 @@ export default function ScheduleForm({ ownerType, ownerId, onSaveSuccess }) {
 
       console.log("📤 Sending payload:", payload);
 
-      const res = await fetch("http://localhost:5000/api/schedules", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/schedules`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -48,7 +48,7 @@ const [results, setResults] = useState(null);
   useEffect(() => {
     if (!quizId || !token) return;
 
-    fetch(`http://localhost:5000/api/quiz/${quizId}/play`, {
+    fetch(`${process.env.REACT_APP_API_URL}/quiz/${quizId}/play`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -119,7 +119,7 @@ const [results, setResults] = useState(null);
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/quiz/submit/${quiz._id}`,
+      `${process.env.REACT_APP_API_URL}/quiz/submit/${quiz._id}`,
       {
         method: "POST",
         headers: {

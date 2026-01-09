@@ -12,7 +12,7 @@ export default function CourseApproval() {
     setLoading(true);
     try {
       const res = await fetch(
-        "http://localhost:5000/api/courses/admin/pending",
+        `${process.env.REACT_APP_API_URL}/courses/admin/pending`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ export default function CourseApproval() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/admin/${id}/approve`,
+        `${process.env.REACT_APP_API_URL}/courses/admin/${id}/approve`,
         {
           method: "PUT",
           headers: {
@@ -70,7 +70,7 @@ export default function CourseApproval() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/admin/${id}/reject`,
+        `${process.env.REACT_APP_API_URL}/courses/admin/${id}/reject`,
         {
           method: "PUT",
           headers: {

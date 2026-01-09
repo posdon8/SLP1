@@ -17,7 +17,7 @@ export default function CalendarPage() {
     const fetchSchedules = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:5000/api/schedules/calendar/all", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/schedules/calendar/all`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

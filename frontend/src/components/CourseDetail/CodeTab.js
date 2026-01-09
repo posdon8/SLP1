@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CodeExerciseForm from "./CodeExerciseForm";
 import ExerciseSettingsModal from "./CodeSettingsModal";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = process.env.REACT_APP_API_URL;
 
 // ✅ Danh sách categories
 const CATEGORIES = [

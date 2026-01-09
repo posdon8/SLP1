@@ -47,7 +47,7 @@ const isTeacher = user?.roles?.includes("teacher");
       // Upload file lên server
       const token = localStorage.getItem("token");
       const uploadRes = await axios.post(
-        "http://localhost:5000/api/upload/file",
+        `${process.env.REACT_APP_API_URL}/upload/file`,
         formData,
         {
           headers: {
@@ -89,7 +89,7 @@ const isTeacher = user?.roles?.includes("teacher");
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/courses/${course._id}/add-resource`,
+        `${process.env.REACT_APP_API_URL}/courses/${course._id}/add-resource`,
         { name, url, type },
         {
           headers: {
@@ -116,7 +116,7 @@ const isTeacher = user?.roles?.includes("teacher");
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:5000/api/courses/${course._id}/resources/${resourceId}`,
+        `${process.env.REACT_APP_API_URL}/courses/${course._id}/resources/${resourceId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -141,7 +141,7 @@ const isTeacher = user?.roles?.includes("teacher");
                 href={
                   res.url?.startsWith("http")
                     ? res.url
-                    : `http://localhost:5000/${res.url.replace(/^\//, "")}`
+                    : `${process.env.REACT_APP_API_URL.replace("/api", "")}/${res.url.replace(/^\//, "")}`
                 }
                 target="_blank"
                 rel="noreferrer"

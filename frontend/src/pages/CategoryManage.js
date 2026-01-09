@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./CourseApproval";
 
-const API_URL = "http://localhost:5000/api/categories";
+const API_URL = `${process.env.REACT_APP_API_URL}/api/categories`;
 
 export default function CategoryManage() {
   const token = localStorage.getItem("token");

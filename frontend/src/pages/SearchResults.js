@@ -17,7 +17,7 @@ export default function SearchResults() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:5000/api/courses/search?q=${encodeURIComponent(query)}`,
+          `${process.env.REACT_APP_API_URL}/courses/search?q=${encodeURIComponent(query)}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

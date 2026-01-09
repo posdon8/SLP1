@@ -20,7 +20,7 @@ export default function EnrollmentPanel({ courseId, token, enrollmentCode, enrol
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/pending-students`,
+        `${process.env.REACT_APP_API_URL}/courses/${courseId}/pending-students`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await res.json();
@@ -36,7 +36,7 @@ export default function EnrollmentPanel({ courseId, token, enrollmentCode, enrol
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/enrollment-mode`,
+       `${process.env.REACT_APP_API_URL}/courses/${courseId}/enrollment-mode`,
         {
           method: "PUT",
           headers: {
@@ -66,7 +66,7 @@ export default function EnrollmentPanel({ courseId, token, enrollmentCode, enrol
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/regenerate-code`,
+        `${process.env.REACT_APP_API_URL}/courses/${courseId}/regenerate-code`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
@@ -90,7 +90,7 @@ export default function EnrollmentPanel({ courseId, token, enrollmentCode, enrol
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/disable-code`,
+        `${process.env.REACT_APP_API_URL}/courses/${courseId}/disable-code`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
@@ -117,7 +117,7 @@ export default function EnrollmentPanel({ courseId, token, enrollmentCode, enrol
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/pending-students/${studentId}/approve`,
+        `${process.env.REACT_APP_API_URL}/courses/${courseId}/pending-students/${studentId}/approve`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
@@ -144,7 +144,8 @@ export default function EnrollmentPanel({ courseId, token, enrollmentCode, enrol
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseId}/pending-students/${studentId}/reject`,
+       `${process.env.REACT_APP_API_URL}
+       /courses/${courseId}/pending-students/${studentId}/reject`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }

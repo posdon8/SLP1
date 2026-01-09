@@ -17,7 +17,7 @@ export default function TeacherDashboard() {
     const fetchMyCourses = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/courses/my-courses",
+          `${process.env.REACT_APP_API_URL}/courses/my-courses`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

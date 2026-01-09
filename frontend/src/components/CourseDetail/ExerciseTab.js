@@ -71,7 +71,7 @@ function QuizPlayView({
       try {
         setStatusLoading(true);
         const res = await fetch(
-          `http://localhost:5000/api/schedules/check/quiz/${selectedQuiz._id}`,
+          `${process.env.REACT_APP_API_URL}/schedules/check/quiz/${selectedQuiz._id}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -528,7 +528,7 @@ export default function ExerciseTab({ course, courseId, isEditMode }) {
       return;
     }
 
-    fetch(`http://localhost:5000/api/quiz/${courseId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/quiz/${courseId}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -561,7 +561,7 @@ export default function ExerciseTab({ course, courseId, isEditMode }) {
     if (!window.confirm("Bạn có chắc muốn xóa quiz này?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/quiz/${quizId}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/quiz/${quizId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

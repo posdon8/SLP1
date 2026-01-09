@@ -38,7 +38,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/send-verification-code", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/send-verification-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email })
@@ -70,7 +70,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/verify-code", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -125,7 +125,7 @@ export default function Register() {
   const handleRegister = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

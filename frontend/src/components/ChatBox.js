@@ -24,7 +24,7 @@ const user = JSON.parse(localStorage.getItem("user"));
     
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/chat/${conversationId}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/${conversationId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -91,7 +91,7 @@ const getAvatar = (msg) => {
     setNewMessage("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat/message", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/message `, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json", 

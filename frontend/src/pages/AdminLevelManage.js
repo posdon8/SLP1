@@ -17,7 +17,7 @@ export default function AdminLevelManage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/users?role=teacher&limit=50`,
+         `${process.env.REACT_APP_API_URL}/admin/users?role=teacher&limit=50`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -35,7 +35,7 @@ export default function AdminLevelManage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/users/${teacherId}/level-info`,
+         `${process.env.REACT_APP_API_URL}/admin/users/${teacherId}/level-info`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -56,7 +56,7 @@ export default function AdminLevelManage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/users/${selectedTeacher}/lock-level`,
+         `${process.env.REACT_APP_API_URL}/admin/users/${selectedTeacher}/lock-level`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
@@ -87,7 +87,7 @@ export default function AdminLevelManage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/users/${selectedTeacher}/unlock-level`,
+         `${process.env.REACT_APP_API_URL}/admin/users/${selectedTeacher}/unlock-level`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` }
@@ -118,7 +118,7 @@ export default function AdminLevelManage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/users/${selectedTeacher}/recalculate-level`,
+         `${process.env.REACT_APP_API_URL}/admin/users/${selectedTeacher}/recalculate-level`,
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` }

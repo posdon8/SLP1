@@ -58,7 +58,7 @@ const handleTeachingClick = () => {
   }, []);
 const fetchCategories = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/categories");
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/categories`);
     const data = await res.json();
     if (data.success) {
       setCategories(data.data);
@@ -95,7 +95,7 @@ const fetchCategories = async () => {
 
       try {
         const response = await fetch(
-          `http://localhost:5000/api/courses/search?q=${encodeURIComponent(searchQuery)}`,
+          `${process.env.REACT_APP_API_URL}/courses/search?q=${encodeURIComponent(searchQuery)}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -166,7 +166,7 @@ const fetchCategories = async () => {
             <h2>SLP</h2>
             <img
               className="logo"
-              src="http://localhost:5000/uploads/images/Vũ Sĩ Tâm - 20215475 - ReportProjectI.pptx.png"
+              src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/Vũ Sĩ Tâm - 20215475 - ReportProjectI.pptx.png`}
               alt="logo"
             />
           </div>
@@ -315,7 +315,7 @@ const fetchCategories = async () => {
             >
               <img
                 className="logo"
-                src="http://localhost:5000/uploads/images/grocery-store.png"
+                src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/grocery-store.png`}
                 alt="logo"
                 style={{ height: "22px", background: "white" }}
               />
@@ -330,7 +330,7 @@ const fetchCategories = async () => {
             >
               <img
                 className="logo"
-                src="http://localhost:5000/uploads/images/voucher.png"
+                src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/voucher.png`}
                 alt="logo"
                 style={{ height: "30px", background: "white" }}
               />

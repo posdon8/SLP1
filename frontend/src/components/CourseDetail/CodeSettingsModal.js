@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ScheduleForm from "../ScheduleForm";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export default function CodeSettingsModal({
   exercise,

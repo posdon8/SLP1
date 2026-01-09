@@ -13,7 +13,7 @@ export default function CalendarPopup({ token }) {
       try {
         setLoading(true);
         const res = await fetch(
-          "http://localhost:5000/api/schedules/calendar/all",
+          `${process.env.REACT_APP_API_URL}/schedules/calendar/all`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

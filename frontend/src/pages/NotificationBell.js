@@ -6,7 +6,7 @@ export default function NotificationBell({ token, isOpen }) {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const API_BASE = "http://localhost:5000/api/notifications";
+  const API_BASE = `${process.env.REACT_APP_API_URL}/notifications`;
 
   // Load notifications
   const loadNotifications = async () => {

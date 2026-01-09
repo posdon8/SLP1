@@ -9,7 +9,7 @@ export default function TeacherChatList({ courseId, userId, token, socket }) {
   useEffect(() => {
     const fetchConvos = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/chat/teacher/${courseId}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/teacher/${courseId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

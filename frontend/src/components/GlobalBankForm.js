@@ -20,7 +20,7 @@ export default function GlobalBankForm({ token }) {
   const fetchGlobalBank = async () => {
   try {
     const res = await fetch(
-      "http://localhost:5000/api/questionbank/global",
+      `${process.env.REACT_APP_API_URL}/questionbank/global`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -43,7 +43,7 @@ export default function GlobalBankForm({ token }) {
 const handleUpdateQuestion = async () => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/questionbank/global/${editingQuestion._id}`,
+      `${process.env.REACT_APP_API_URL}/questionbank/global/${editingQuestion._id}`,
       {
         method: "PUT",
         headers: {
@@ -71,7 +71,7 @@ const handleDeleteQuestion = async (id) => {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/questionbank/global/${id}`,
+      `${process.env.REACT_APP_API_URL}/questionbank/global/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -226,7 +226,7 @@ const handleDeleteQuestion = async (id) => {
         difficulty: q.difficulty || "medium",
       }));
 
-      const res = await fetch("http://localhost:5000/api/questionbank/global/import-file", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/questionbank/global/import-file`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json", 
@@ -295,7 +295,7 @@ const handleDeleteQuestion = async (id) => {
       let successCount = 0;
       
       for (const q of questions) {
-        const res = await fetch("http://localhost:5000/api/questionbank/global/create", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/questionbank/global/create`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json", 

@@ -189,7 +189,7 @@ const closePopup = () => {
   // Lấy danh sách câu hỏi từ QuestionBank
   useEffect(() => {
     if (!token) return;
-    fetch(`http://localhost:5000/api/questionbank/local/${courseId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/questionbank/local/${courseId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => {
@@ -322,8 +322,8 @@ const handleSaveQuiz = async () => {
 
   try {
     const url = isEdit
-      ? `http://localhost:5000/api/quiz/${editingQuiz._id}`
-      : "http://localhost:5000/api/quiz/create";
+      ? `${process.env.REACT_APP_API_URL}/quiz/${editingQuiz._id}`
+      : `${process.env.REACT_APP_API_URL}/api/quiz/create`;
 
     const method = isEdit ? "PUT" : "POST";
 

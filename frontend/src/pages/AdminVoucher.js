@@ -25,7 +25,7 @@ export default function AdminVoucher() {
   // ✅ Fetch courses for multi-select
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/courses", {
+      .get(`${process.env.REACT_APP_API_URL}/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -108,7 +108,7 @@ export default function AdminVoucher() {
       console.log("📤 Submitting voucher:", payload);
 
       const res = await axios.post(
-        "http://localhost:5000/api/coupon",
+        `${process.env.REACT_APP_API_URL}/coupon`,
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -58,7 +58,7 @@ export default function CourseDetail() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:5000/api/courses/${id}`, {
+      const res = await fetch( `${process.env.REACT_APP_API_URL}/courses/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ export default function CourseDetail() {
     formData.append("image", file);
 
     try {
-      const response = await fetch("http://localhost:5000/api/upload/image", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/upload/image`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -106,7 +106,7 @@ export default function CourseDetail() {
 
       const data = await response.json();
       if (data.success) {
-        const updateRes = await fetch(`http://localhost:5000/api/courses/${id}`, {
+        const updateRes = await fetch( `${process.env.REACT_APP_API_URL}/courses/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -142,7 +142,7 @@ export default function CourseDetail() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${id}/hidden`,
+         `${process.env.REACT_APP_API_URL}/courses/${id}/hidden`,
         {
           method: "PUT",
           headers: {
@@ -176,7 +176,7 @@ export default function CourseDetail() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${course._id}`,
+         `${process.env.REACT_APP_API_URL}/courses/${course._id}`,
         {
           method: "DELETE",
           headers: {
@@ -219,7 +219,7 @@ export default function CourseDetail() {
   // 🟦 Initialize socket
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io("http://localhost:5000", { auth: { token } });
+      socketRef.current = io(`${process.env.REACT_APP_SOCKET_URL}`, { auth: { token } });
     }
   }, [token]);
 
@@ -239,7 +239,7 @@ export default function CourseDetail() {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/chat/start", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/start`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json", 
@@ -304,7 +304,7 @@ export default function CourseDetail() {
     if (!target?._id) return alert("Không xác định được người để chat!");
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat/start", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ userId: target._id, courseId: course._id })
@@ -333,7 +333,7 @@ export default function CourseDetail() {
     if (!window.confirm(`Bạn có chắc muốn kick ${studentName} ra khỏi khóa học?`)) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/courses/${id}/kick-student`, {
+      const res = await fetch( `${process.env.REACT_APP_API_URL}/courses/${id}/kick-student`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -358,7 +358,7 @@ export default function CourseDetail() {
 
   const handleJoinCourse = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/courses/${id}/join`, {
+      const res = await fetch( `${process.env.REACT_APP_API_URL}/courses/${id}/join`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -393,7 +393,7 @@ export default function CourseDetail() {
   const handleAddLesson = async (sectionId, lessonData) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${course._id}/sections/${sectionId}/lessons`,
+         `${process.env.REACT_APP_API_URL}/courses/${course._id}/sections/${sectionId}/lessons`,
         {
           method: "POST",
           headers: {
@@ -416,7 +416,7 @@ export default function CourseDetail() {
   const handleUpdateLesson = async (lesson) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${course._id}/lessons/${lesson._id}`,
+         `${process.env.REACT_APP_API_URL}/courses/${course._id}/lessons/${lesson._id}`,
         {
           method: "PUT",
           headers: { 
@@ -439,7 +439,7 @@ export default function CourseDetail() {
   const handleDeleteLesson = async (lessonId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${course._id}/lessons/${lessonId}`,
+         `${process.env.REACT_APP_API_URL}/courses/${course._id}/lessons/${lessonId}`,
         {
           method: "DELETE",
           headers: {
@@ -461,7 +461,7 @@ export default function CourseDetail() {
   const handleAddSection = async (title) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${course._id}/add-section`,
+         `${process.env.REACT_APP_API_URL}/courses/${course._id}/add-section`,
         {
           method: "POST",
           headers: {
@@ -482,7 +482,7 @@ export default function CourseDetail() {
   const handleDeleteSection = async (sectionId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${course._id}/sections/${sectionId}`,
+         `${process.env.REACT_APP_API_URL}/courses/${course._id}/sections/${sectionId}`,
         { 
           method: "DELETE",
           headers: {
@@ -508,7 +508,7 @@ export default function CourseDetail() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${id}/reviews`,
+         `${process.env.REACT_APP_API_URL}/courses/${id}/reviews`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json", },
@@ -535,7 +535,7 @@ export default function CourseDetail() {
     if (!window.confirm("Bạn có chắc muốn xóa đánh giá này không?")) return;
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${id}/reviews/${reviewId}`,
+         `${process.env.REACT_APP_API_URL}/courses/${id}/reviews/${reviewId}`,
         { method: "DELETE", 
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: user._id }) }
@@ -629,10 +629,10 @@ export default function CourseDetail() {
       </ul>
     </div>
     <div className="course-meta1">
-      <p><img src="http://localhost:5000/uploads/images/teacher.png" className="image1" alt="quiz" />Giảng viên: {course.teacher?.fullName || "Chưa cập nhật"}</p>
-      <p><img src="http://localhost:5000/uploads/images/volume.png" className="image" alt="quiz" />Trình độ: {course.level || "Cơ bản"}</p>
-      <p><img src="http://localhost:5000/uploads/images/group-users.png" className="image" alt="quiz" />Học viên: {course.totalStudents || 0}</p>
-      <p><img src="http://localhost:5000/uploads/images/clock.png" className="image" alt="quiz" />Tổng thời lượng: {course.totalDuration} phút</p>
+      <p><img src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/teacher.png`} className="image1" alt="quiz" />Giảng viên: {course.teacher?.fullName || "Chưa cập nhật"}</p>
+      <p><img src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/volume.png`} className="image" alt="quiz" />Trình độ: {course.level || "Cơ bản"}</p>
+      <p><img src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/group-users.png`} className="image" alt="quiz" />Học viên: {course.totalStudents || 0}</p>
+      <p><img src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/clock.png`} className="image" alt="quiz" />Tổng thời lượng: {course.totalDuration} phút</p>
     </div>
   </div>
 

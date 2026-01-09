@@ -18,7 +18,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
 
   /* ================= FETCH CATEGORIES ================= */
   useEffect(() => {
-    fetch("http://localhost:5000/api/categories")
+    fetch(`${process.env.REACT_APP_API_URL}/categories`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -61,7 +61,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch("http://localhost:5000/api/upload/image", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/upload/image`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/courses", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/courses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

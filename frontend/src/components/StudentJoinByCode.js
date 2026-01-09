@@ -35,7 +35,7 @@ export default function StudentJoinByCode() {
     setCourseInfo(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/courses", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/courses`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -67,7 +67,7 @@ export default function StudentJoinByCode() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/courses/${courseInfo._id}/join-by-code`,
+        `${process.env.REACT_APP_API_URL}/courses/${courseInfo._id}/join-by-code`,
         {
           method: "POST",
           headers: {
