@@ -34,30 +34,38 @@ window.dispatchEvent(new Event("tokenChanged"));
     }
 };
 const handleGoogleLogin = async (credentialResponse) => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/google-login`, {
+  try {
+    console.log("🔄 Sending credential...");
+    
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/auth/google-login`,
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tokenId: credentialResponse.credential })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        window.dispatchEvent(new Event("tokenChanged"));
-
-
-        login(data.user, data.token);
-        navigate("/");
-        alert("Đăng nhập Google thành công!");
-      } else {
-        alert(data.error);
+        body: JSON.stringify({ 
+          credential: credentialResponse.credential  // ⭐ Chính xác
+        })
       }
-    } catch (err) {
-      console.error(err);
-      alert("Lỗi kết nối server");
-    }
-  };
+    );
 
+    const data = await res.json();
+    console.log("📦 Response:", data);
+
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      window.dispatchEvent(new Event("tokenChanged"));
+      login(data.user, data.token);
+      navigate("/");
+      alert("✅ Đăng nhập Google thành công!");
+    } else {
+      console.error("❌ Backend error:", data.error);
+      alert("❌ " + (data.error || "Đăng nhập thất bại"));
+    }
+  } catch (err) {
+    console.error("❌ Network error:", err);
+    alert("❌ Lỗi kết nối server");
+  }
+};
 
 return (
 

@@ -409,6 +409,86 @@ router.post("/login", async (req, res) => {
 }
 });
 router.post('/google-login', async (req, res) => {
+  try {
+    const { credential } = req.body; // ⭐ Thay từ tokenId
+    
+    if (!credential) {
+      console.error("🚫 Thiếu credential");
+      return res.status(400).json({ error: 'Thiếu token.' });
+    }
+
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      console.error("🚫 GOOGLE_CLIENT_ID chưa set");
+      return res.status(500).json({ error: "Lỗi cấu hình server" });
+    }
+
+    // ⭐ Verify token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture, sub: googleId } = payload;
+
+    console.log(`✅ Google verified: ${email}`);
+
+    // Kiểm tra user
+    let user = await User.findOne({ email });
+    
+    if (!user) {
+      // Tạo user mới
+      user = new User({
+        username: email.split("@")[0], // ⭐ Dùng phần trước @
+        email,
+        fullName: name,
+        avatarUrl: picture,
+        googleId,
+        roles: ["student"],
+      });
+      await user.save();
+      console.log(`📝 User mới: ${email}`);
+    } else {
+      // Link Google nếu chưa link
+      if (!user.googleId) {
+        user.googleId = googleId;
+        await user.save();
+        console.log(`🔗 Linked Google: ${email}`);
+      }
+    }
+
+    // Tạo JWT
+    const token = jwt.sign(
+      { 
+        id: user._id, 
+        email: user.email,
+        roles: user.roles 
+      }, 
+      JWT_SECRET, 
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      success: true,
+      message: '✅ Đăng nhập Google thành công',
+      token,
+      user: {
+        _id: user._id,
+        name: user.username,
+        fullName: user.fullName,
+        email: user.email,
+        avatarUrl: user.avatarUrl,
+        roles: user.roles
+      }
+    });
+
+  } catch (err) {
+    console.error("❌ Google login error:", err.message);
+    res.status(401).json({ error: 'Token Google không hợp lệ' });
+  }
+});
+/*
+router.post('/google-login', async (req, res) => {
   const { tokenId } = req.body; // token từ frontend
   if (!process.env.GOOGLE_CLIENT_ID) {
     console.error("🚫 LỖI CẤU HÌNH: Thiếu GOOGLE_CLIENT_ID trong .env");
@@ -460,6 +540,7 @@ router.post('/google-login', async (req, res) => {
     res.status(401).json({ error: 'Token Google không hợp lệ' });
   }
 });
+*/
 router.post("/add-teacher-role", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
