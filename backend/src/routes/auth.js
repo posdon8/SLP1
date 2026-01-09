@@ -12,12 +12,20 @@ const { authMiddleware } = require("../middleware/auth");
 
 const verificationCodes = new Map();
 
-// ⭐ Setup Nodemailer
+/* ⭐ Setup Nodemailer
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,  // example@gmail.com
     pass: process.env.EMAIL_PASSWORD  // app password
+  }
+}); */
+const transporter = nodemailer.createTransport({
+  host: "smtp.sendgrid.net",
+  port: 587,
+  auth: {
+    user: "apikey",  // ⭐ Exact text, không phải email!
+    pass: process.env.SENDGRID_API_KEY
   }
 });
 const generateCode = () => {
