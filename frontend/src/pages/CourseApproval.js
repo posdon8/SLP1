@@ -101,7 +101,7 @@ export default function CourseApproval() {
 
   return (
     <div className="course-approval-container">
-      <h2>Khóa học chờ duyệt</h2>
+      <h2 style={{fontWeight: "700"}}>Khóa học chờ duyệt</h2>
 
       {loading && <p className="loading-text">⏳ Đang tải...</p>}
 
@@ -126,7 +126,7 @@ export default function CourseApproval() {
             <p> {c.teacher?.fullName || "N/A"}</p>
             
             <p> {c.categories?.map(cat => cat.name).join(", ") || "Chưa phân loại"}</p>
-{c.isFree ? (
+        {c.isFree ? (
           <p className="no-price">Miễn phí</p>
         ) : (
           <p className="price">{c.price?.toLocaleString()}đ</p>
@@ -139,7 +139,7 @@ export default function CourseApproval() {
                   approve(c._id);
                 }}
               >
-                ✅ Duyệt
+                 Duyệt
               </button>
 
               <button
@@ -149,7 +149,7 @@ export default function CourseApproval() {
                   reject(c._id);
                 }}
               >
-                ❌ Từ chối
+                Từ chối
               </button>
             </div>
           </div>

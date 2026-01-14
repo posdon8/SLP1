@@ -122,7 +122,7 @@ const manualQuestionsReducer = (state, action) => {
   }
 };
 
-export default function QuizTab({ courseId, course, token, editingQuiz, onCancelEdit, onSaveQuiz }) {
+export default function QuizTab({ courseId, course, token, editingQuiz, onCancelEdit, onSaveQuiz, onQuizUpdated  }) {
   const [randomCount, setRandomCount] = useState(1);
   const [questions, setQuestions] = useState([]);
   const [chapters, setChapters] = useState([]);
@@ -323,7 +323,7 @@ const handleSaveQuiz = async () => {
   try {
     const url = isEdit
       ? `${process.env.REACT_APP_API_URL}/quiz/${editingQuiz._id}`
-      : `${process.env.REACT_APP_API_URL}/api/quiz/create`;
+      : `${process.env.REACT_APP_API_URL}/quiz/create`;
 
     const method = isEdit ? "PUT" : "POST";
 
@@ -356,7 +356,9 @@ const handleSaveQuiz = async () => {
     setQuizQuestions([]);
     setSelectedQuestions([]);
     dispatch({ type: "RESET" }); // 👈 cần thêm case RESET trong reducer
-
+    if (onQuizUpdated) {
+        onQuizUpdated(data.quiz);
+      }
     onSaveQuiz?.(data.quiz);
   } catch (err) {
     console.error(err);

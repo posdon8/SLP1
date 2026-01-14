@@ -539,7 +539,7 @@ export default function AdminUserManage() {
       {showStats && stats && (
         <div
           style={{
-            backgroundColor: "#f5f5f5",
+            backgroundColor: "#ffd0be9c",
             padding: "20px",
             borderRadius: "8px",
             marginBottom: "20px",
@@ -553,15 +553,15 @@ export default function AdminUserManage() {
             <p style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>{stats.totalUsers}</p>
           </div>
           <div style={{ padding: "15px", backgroundColor: "white", borderRadius: "4px" }}>
-            <h3 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}>🎓 Students</h3>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}> Students</h3>
             <p style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>{stats.students}</p>
           </div>
           <div style={{ padding: "15px", backgroundColor: "white", borderRadius: "4px" }}>
-            <h3 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}>👨‍🏫 Teachers</h3>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}> Teachers</h3>
             <p style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>{stats.teachers}</p>
           </div>
           <div style={{ padding: "15px", backgroundColor: "white", borderRadius: "4px" }}>
-            <h3 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}>👑 Admins</h3>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}> Admins</h3>
             <p style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>{stats.admins}</p>
           </div>
         </div>
@@ -653,7 +653,7 @@ export default function AdminUserManage() {
                 <tr key={user._id} style={{ borderBottom: "1px solid #eee" }}>
                   <td style={{ padding: "12px" }}>
                     <img
-                      src={user.avatarUrl || "https://via.placeholder.com/40"}
+                      src={user.avatarUrl || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}
                       alt="avatar"
                       style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
                     />

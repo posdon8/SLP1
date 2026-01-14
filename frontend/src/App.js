@@ -22,7 +22,7 @@ import NewsManage from "./pages/NewsManage";
 import StudentJoinByCode from "./components/StudentJoinByCode";
 import TeacherEarnings from "./components/TeacherEarnings";
 import AdminPayoutManager from "./components/AdminPayoutManager";
-
+import TeacherPayoutRequest from "./components/TeacherPayoutRequest";
 import CalendarPage from "./pages/CalendarPage";
 import CategoryManage from "./pages/CategoryManage";
 import CourseApproval from "./pages/CourseApproval";
@@ -84,6 +84,7 @@ function App() {
         <Route  path="/code-manage" element={<CodeManage />}  />
         <Route path="/exercises/:exerciseId" element={<CodeDetail />} />
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+        <Route path="/teacher/payout-request" element={<TeacherPayoutRequest />} />
         <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/teacher-payment-dashboard" element={<TeacherPayment />} />
         <Route path="/admin/payout" element={<AdminPayoutManager />} />

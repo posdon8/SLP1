@@ -160,7 +160,7 @@ export default function ScheduleForm({ ownerType, ownerId, onSaveSuccess }) {
         backgroundColor: "#fff"
       }}
     >
-      <h3 style={{ marginTop: 0 }}>⏰ Quản lý lịch thời gian</h3>
+      <h3 style={{ marginTop: 0 }}> Quản lý lịch thời gian</h3>
 
       {error && (
         <div
@@ -304,7 +304,7 @@ export default function ScheduleForm({ ownerType, ownerId, onSaveSuccess }) {
           if (!loading) e.target.style.backgroundColor = "#1976d2";
         }}
       >
-        {loading ? "⏳ Đang lưu..." : "💾 Lưu lịch"}
+        {loading ? "⏳ Đang lưu..." : " Lưu "}
       </button>
     </div>
   );

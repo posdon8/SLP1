@@ -82,6 +82,11 @@ const submissionSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  isTeacherSubmission: {
+  type: Boolean,
+  default: false,
+},
+
   totalTests: {
     type: Number,
     required: true,

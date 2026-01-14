@@ -1,6 +1,48 @@
 // models/Payout.js - FINAL
 
 const mongoose = require("mongoose");
+const payoutRequestSchema = new mongoose.Schema({
+  teacherId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
+  amount: {
+    type: Number,
+    required: true,
+    min: 100000  // Min 100k VND
+  },
+  bankAccount: {
+    bankName: String,
+    accountNumber: String,
+    accountHolder: String
+  },
+  status: {
+    type: String,
+    enum: ['draft', 'submitted', 'approved', 'paid', 'rejected'],
+    default: 'submitted'
+  },
+  reason: String,  // For rejection
+  requestNumber: String,  // REQ-2025-001
+  
+  // ========== TIMESTAMPS ==========
+  createdAt: { 
+    type: Date, 
+    default: Date.now, 
+    index: true 
+  },
+  submittedAt: Date,
+  approvedAt: Date,
+  paidAt: Date,
+  
+  // ========== LINK TO BATCH ==========
+  batchId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payout'
+    // Link to PayoutBatch khi được add vào batch
+  }
+}, { timestamps: true });
 
 const payoutSchema = new mongoose.Schema({
   // ========== BATCH IDENTIFICATION ==========
@@ -173,4 +215,7 @@ payoutSchema.virtual("completionRate").get(function() {
 
 payoutSchema.set("toJSON", { virtuals: true });
 
-module.exports = mongoose.model("Payout", payoutSchema);
+module.exports = {
+  Payout: mongoose.model("Payout", payoutSchema),
+  PayoutRequest: mongoose.model("PayoutRequest", payoutRequestSchema)
+};

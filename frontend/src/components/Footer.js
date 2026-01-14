@@ -89,7 +89,7 @@ export default function Footer() {
 
         {/* 💬 Phản hồi */}
         <div className="footer-section feedback-section">
-          <h4>💬 Góp ý / Phản hồi</h4>
+          <h4> Góp ý / Phản hồi</h4>
           <form className="feedback-form" onSubmit={handleSubmit}>
             {/* Email */}
             <input

@@ -3,22 +3,40 @@ const router = express.Router();
 const Schedule = require("../models/Schedule");
 const Course = require("../models/Course");
 const Quiz = require("../models/Quiz");
-const Exercise = require("../models/Exercise"); // ✅ Import Exercise
+const Exercise = require("../models/Exercise");
 const { authMiddleware } = require("../middleware/auth");
 const checkSchedule = require("../utils/checkSchedule");
 const NotificationService = require("../services/notificationService");
 
-// ✅ POST - Tạo/cập nhật lịch
+// ========================
+// HELPER: Check if user is teacher of course
+// ========================
+const isTeacherOfCourse = async (courseId, userId) => {
+  const course = await Course.findById(courseId);
+  return course && course.teacher?.toString() === userId.toString();
+};
+
+// ========================
+// HELPER: Check if user is student of course
+// ========================
+const isStudentOfCourse = async (courseId, userId) => {
+  const course = await Course.findById(courseId);
+  if (!course) return false;
+  return course.students?.some(s => {
+    const studentId = typeof s === "string" ? s : s?._id;
+    return studentId?.toString() === userId.toString();
+  });
+};
+
+// ✅ POST - Create/Update schedule (TEACHER ONLY)
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { ownerType, ownerId, openAt, closeAt } = req.body;
 
-    // ✅ Hỗ trợ course, quiz, code
     if (!["course", "quiz", "code"].includes(ownerType)) {
       return res.status(400).json({ success: false, message: "ownerType không hợp lệ" });
     }
 
-    // Validate dates
     if (openAt && closeAt && new Date(openAt) >= new Date(closeAt)) {
       return res.status(400).json({ 
         success: false, 
@@ -56,7 +74,6 @@ router.post("/", authMiddleware, async (req, res) => {
       courseId = course._id;
       ownerTitle = quiz.title;
     } else if (ownerType === "code") {
-      // ✅ Xử lý code (exercise)
       const exercise = await Exercise.findById(ownerId);
       if (!exercise) {
         return res.status(404).json({ success: false, message: "Không tìm thấy bài tập" });
@@ -73,17 +90,13 @@ router.post("/", authMiddleware, async (req, res) => {
       ownerTitle = exercise.title;
     }
 
-    // ✅ Kiểm tra quyền - chỉ teacher mới được set lịch
+    // ✅ CHECK: Chỉ teacher mới được set schedule
     if (teacher?.toString() !== req.user._id.toString()) {
-      console.log("❌ Permission denied:", {
-        courseTeacher: teacher?.toString(),
-        userId: req.user._id.toString(),
-        match: teacher?.toString() === req.user._id.toString()
-      });
-      return res.status(403).json({ success: false, message: "Không có quyền" });
+      console.log("❌ Permission denied - not teacher");
+      return res.status(403).json({ success: false, message: "Chỉ giáo viên mới có quyền" });
     }
 
-    // ✅ Tạo hoặc cập nhật schedule
+    // Create or update schedule
     let schedule = await Schedule.findOne({ ownerType, ownerId });
 
     if (schedule) {
@@ -103,7 +116,7 @@ router.post("/", authMiddleware, async (req, res) => {
       console.log("✅ Schedule created:", schedule._id);
     }
 
-    // ✅ Gửi notification cho students
+    // Notify students
     if (students && students.length > 0) {
       const studentIds = students
         .map(s => (typeof s === "string" ? s : s?._id))
@@ -130,10 +143,44 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-// ✅ GET - Lấy tất cả lịch
+// ✅ GET - Get all schedules (AUTHENTICATED USERS ONLY)
 router.get("/calendar/all", authMiddleware, async (req, res) => {
   try {
-    const schedules = await Schedule.find({ isActive: true, ownerId: { $ne: null } });
+    // ✅ Lấy tất cả schedules - users có thể xem schedules mà họ có quyền
+    // (1) Schedules của courses mà user là teacher
+    // (2) Schedules của courses mà user là student
+    // (3) Hoặc nếu user là admin, xem tất cả
+
+    const isAdmin = req.user.roles?.includes('admin');
+    const userId = req.user._id;
+
+    let schedules;
+    if (isAdmin) {
+      // Admin xem tất cả
+      schedules = await Schedule.find({ isActive: true, ownerId: { $ne: null } });
+    } else {
+      // User bình thường: get courses they teach or enrolled
+      const teacherCourses = await Course.find({ teacher: userId }).select("_id");
+      const studentCourses = await Course.find({ students: userId }).select("_id");
+
+      const courseIds = [
+        ...teacherCourses.map(c => c._id),
+        ...studentCourses.map(c => c._id)
+      ];
+
+      // Get schedules for these courses
+      schedules = await Schedule.find({
+        isActive: true,
+        $or: [
+          { ownerType: "course", ownerId: { $in: courseIds } },
+          // For quiz/code: find by course
+          {
+            ownerType: { $in: ["quiz", "code"] },
+            ownerId: { $exists: true }
+          }
+        ]
+      });
+    }
 
     const result = [];
     for (const schedule of schedules) {
@@ -147,21 +194,29 @@ router.get("/calendar/all", authMiddleware, async (req, res) => {
           owner = await Quiz.findById(schedule.ownerId).select("title courseId");
           courseId = owner?.courseId;
         } else if (schedule.ownerType === "code") {
-          // ✅ Xử lý code
           owner = await Exercise.findById(schedule.ownerId).select("title courseId");
           courseId = owner?.courseId;
         }
 
         if (owner && courseId) {
-          result.push({
-            id: schedule._id,
-            type: schedule.ownerType,
-            title: owner.title || "Untitled",
-            openAt: schedule.openAt || null,
-            closeAt: schedule.closeAt || null,
-            ownerId: owner._id,
-            courseId: courseId
-          });
+          // ✅ Check: user có quyền xem schedule này không?
+          let hasAccess = isAdmin;
+          if (!hasAccess) {
+            hasAccess = await isTeacherOfCourse(courseId, userId) || 
+                       await isStudentOfCourse(courseId, userId);
+          }
+
+          if (hasAccess) {
+            result.push({
+              id: schedule._id,
+              type: schedule.ownerType,
+              title: owner.title || "Untitled",
+              openAt: schedule.openAt || null,
+              closeAt: schedule.closeAt || null,
+              ownerId: owner._id,
+              courseId: courseId
+            });
+          }
         }
       } catch (err) {
         console.error(`Error processing schedule:`, err);
@@ -171,50 +226,107 @@ router.get("/calendar/all", authMiddleware, async (req, res) => {
 
     res.json({ success: true, schedules: result });
   } catch (err) {
-    console.error("Error:", err);
+    console.error("GET /calendar/all error:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// ✅ GET - Lấy lịch cụ thể
+// ✅ GET - Get specific schedule
 router.get("/:ownerType/:ownerId", authMiddleware, async (req, res) => {
   try {
     const { ownerType, ownerId } = req.params;
+    const userId = req.user._id;
+    const isAdmin = req.user.roles?.includes('admin');
 
-    // ✅ Hỗ trợ code
     if (!["course", "quiz", "code"].includes(ownerType)) {
       return res.status(400).json({ success: false, message: "ownerType không hợp lệ" });
     }
 
+    // ✅ Get schedule
     const schedule = await Schedule.findOne({
       ownerType,
       ownerId,
       isActive: true
     });
 
-    res.json({ success: true, schedule: schedule || null });
+    if (!schedule) {
+      return res.json({ success: true, schedule: null });
+    }
+
+    // ✅ Check authorization
+    let courseId;
+    if (ownerType === "course") {
+      courseId = ownerId;
+    } else if (ownerType === "quiz") {
+      const quiz = await Quiz.findById(ownerId).select("courseId");
+      courseId = quiz?.courseId;
+    } else if (ownerType === "code") {
+      const exercise = await Exercise.findById(ownerId).select("courseId");
+      courseId = exercise?.courseId;
+    }
+
+    if (!courseId) {
+      return res.status(404).json({ success: false, message: "Course không tìm thấy" });
+    }
+
+    const hasAccess = isAdmin || 
+                     await isTeacherOfCourse(courseId, userId) || 
+                     await isStudentOfCourse(courseId, userId);
+
+    if (!hasAccess) {
+      return res.status(403).json({ success: false, message: "Không có quyền xem" });
+    }
+
+    res.json({ success: true, schedule });
   } catch (err) {
     console.error("GET /:ownerType/:ownerId error:", err);
     res.status(500).json({ success: false, message: "Lỗi server", error: err.message });
   }
 });
 
-// ✅ GET - Check xem content có đang mở không
+// ✅ GET - Check if content is open
 router.get("/check/:ownerType/:ownerId", authMiddleware, async (req, res) => {
   try {
     const { ownerType, ownerId } = req.params;
+    const userId = req.user._id;
+    const isAdmin = req.user.roles?.includes('admin');
 
-    // ✅ Hỗ trợ code
     if (!["course", "quiz", "code"].includes(ownerType)) {
       return res.status(400).json({ success: false, message: "ownerType không hợp lệ" });
     }
 
+    // ✅ Get schedule
     const schedule = await Schedule.findOne({
       ownerType,
       ownerId,
       isActive: true
     });
 
+    // ✅ Check authorization
+    let courseId;
+    if (ownerType === "course") {
+      courseId = ownerId;
+    } else if (ownerType === "quiz") {
+      const quiz = await Quiz.findById(ownerId).select("courseId");
+      courseId = quiz?.courseId;
+    } else if (ownerType === "code") {
+      const exercise = await Exercise.findById(ownerId).select("courseId");
+      courseId = exercise?.courseId;
+    }
+
+    if (!courseId) {
+      return res.status(404).json({ success: false, message: "Course không tìm thấy" });
+    }
+
+    const hasAccess = isAdmin || 
+                     await isTeacherOfCourse(courseId, userId) || 
+                     await isStudentOfCourse(courseId, userId);
+
+    if (!hasAccess) {
+      return res.status(403).json({ success: false, message: "Không có quyền truy cập" });
+    }
+
+    // ✅ Check schedule status
     const status = checkSchedule(schedule);
 
     if (status !== "OPEN") {

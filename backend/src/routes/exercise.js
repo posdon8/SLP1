@@ -411,6 +411,9 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 // ========================================
 // POST /:id/submit - Nộp bài
 // ========================================
+// ========================================
+// POST /:id/submit - Nộp bài
+// ========================================
 router.post("/:id/submit", authMiddleware, async (req, res) => {
   try {
     const exerciseId = req.params.id;
@@ -431,7 +434,7 @@ router.post("/:id/submit", authMiddleware, async (req, res) => {
       });
     }
 
-    const exercise = await Exercise.findById(req.params.id);
+    const exercise = await Exercise.findById(exerciseId);
 
     if (!exercise) {
       return res.status(404).json({
@@ -447,7 +450,17 @@ router.post("/:id/submit", authMiddleware, async (req, res) => {
       });
     }
 
-    // ✅ Create submission
+    // ========================================
+    // ✅ XÁC ĐỊNH TEACHER SUBMIT
+    // ========================================
+    const isTeacherSubmission =
+      req.user.roles?.includes("admin") ||
+      req.user.roles?.includes("teacher") ||
+      exercise.author.toString() === req.user._id.toString();
+
+    // ========================================
+    // ✅ CREATE SUBMISSION
+    // ========================================
     const submission = new Submission({
       exercise: exercise._id,
       student: req.user._id,
@@ -456,11 +469,16 @@ router.post("/:id/submit", authMiddleware, async (req, res) => {
       status: "Judging",
       maxScore: exercise.totalPoints,
       totalTests: exercise.testCases.length,
+
+      // ⭐ FLAG QUAN TRỌNG
+      isTeacherSubmission,
     });
 
     await submission.save();
 
-    // ✅ Judge submission (async)
+    // ========================================
+    // ✅ JUDGE (ASYNC)
+    // ========================================
     judgeSubmission(
       code,
       language,
@@ -478,28 +496,38 @@ router.post("/:id/submit", authMiddleware, async (req, res) => {
 
         await submission.save();
 
-        // Update exercise stats
-        exercise.submissionCount += 1;
-        if (judgeResult.status === "Accepted") {
-          exercise.acceptedCount += 1;
+        // ========================================
+        // ✅ CHỈ UPDATE STATS NẾU LÀ STUDENT
+        // ========================================
+        if (!submission.isTeacherSubmission) {
+          exercise.submissionCount += 1;
+
+          if (judgeResult.status === "Accepted") {
+            exercise.acceptedCount += 1;
+          }
+
+          await exercise.save();
         }
-        await exercise.save();
       })
       .catch(async (error) => {
         console.error("❌ Judge error:", error);
         submission.status = "Runtime Error";
-        submission.testResults = [{
-          testCaseIndex: 0,
-          status: "Runtime Error",
-          error: error.message,
-        }];
+        submission.testResults = [
+          {
+            testCaseIndex: 0,
+            status: "Runtime Error",
+            error: error.message,
+          },
+        ];
         await submission.save();
       });
 
     res.status(201).json({
       success: true,
       data: submission,
-      message: "Đã nộp bài! Đang chấm điểm...",
+      message: isTeacherSubmission
+        ? "Preview bài tập (teacher) – đang chấm..."
+        : "Đã nộp bài! Đang chấm điểm...",
     });
   } catch (error) {
     console.error("❌ Submit error:", error);
@@ -510,5 +538,6 @@ router.post("/:id/submit", authMiddleware, async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;

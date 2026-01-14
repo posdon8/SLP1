@@ -177,7 +177,7 @@ const totalCourses = completedPayments.reduce((sum, p) => {
         </div>
 
         <div className="sort-group">
-          <label>📊 Sắp xếp:</label>
+          <label>Sắp xếp:</label>
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="newest">Mới nhất</option>
             <option value="oldest">Cũ nhất</option>
@@ -187,7 +187,7 @@ const totalCourses = completedPayments.reduce((sum, p) => {
         </div>
 
         <button className="btn-refresh" onClick={fetchPaymentHistory}>
-          🔄 Tải lại
+          🔄
         </button>
       </section>
 
@@ -241,7 +241,7 @@ const totalCourses = completedPayments.reduce((sum, p) => {
                   ID: {payment.transactionId?.slice(0, 20) || payment._id?.slice(-8)}
                 </p>
                 <p className="transaction-date">
-                  📅 {new Date(payment.createdAt).toLocaleDateString("vi-VN", {
+                   {new Date(payment.createdAt).toLocaleDateString("vi-VN", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -286,7 +286,7 @@ const totalCourses = completedPayments.reduce((sum, p) => {
                     }
                   }}
                 >
-                  ▶️ {courseCount === 1 ? "Vào học" : "Xem khóa học"}
+                   {courseCount === 1 ? "Vào học" : "Xem khóa học"}
                 </button>
               )}
 

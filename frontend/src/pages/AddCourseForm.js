@@ -6,6 +6,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [course, setCourse] = useState({
     title: "",
@@ -16,17 +17,19 @@ export default function AddCourseForm({ token, onCourseAdded }) {
     accessType: "public",
   });
 
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+
   /* ================= FETCH CATEGORIES ================= */
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/categories`)
+    fetch(`${API_URL}/categories`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setCategories(data.data);
         }
       })
-      .catch(() => console.error("❌ Lỗi load category"));
-  }, []);
+      .catch((err) => console.error("❌ Error loading categories:", err));
+  }, [API_URL]);
 
   /* ================= HANDLE CHANGE ================= */
   const handleChange = (e) => {
@@ -51,7 +54,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
   /* ================= HANDLE THUMBNAIL UPLOAD ================= */
   const handleThumbnailUpload = async (file) => {
     if (!file || !file.type.startsWith("image/")) {
-      alert("❌ Vui lòng chọn file ảnh!");
+      alert("❌ Please select an image file!");
       return;
     }
 
@@ -61,7 +64,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/upload/image`, {
+      const res = await fetch(`${API_URL}/upload/image`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -76,12 +79,12 @@ export default function AddCourseForm({ token, onCourseAdded }) {
           ...course,
           thumbnail: data.imageUrl,
         });
-        alert("✅ Upload ảnh thành công!");
+        alert("✅ Image uploaded successfully!");
       } else {
-        alert("❌ Upload thất bại: " + (data.message || "Lỗi server"));
+        alert("❌ Upload failed: " + (data.message || "Server error"));
       }
     } catch (error) {
-      alert("❌ Lỗi upload: " + error.message);
+      alert("❌ Upload error: " + error.message);
     } finally {
       setUploadingThumbnail(false);
     }
@@ -124,9 +127,21 @@ export default function AddCourseForm({ token, onCourseAdded }) {
     e.preventDefault();
 
     if (selectedCategories.length === 0) {
-      alert("❗ Vui lòng chọn ít nhất 1 danh mục");
+      alert("❗ Please select at least 1 category");
       return;
     }
+
+    if (!course.title.trim()) {
+      alert("❗ Course title is required");
+      return;
+    }
+
+    if (!course.description.trim()) {
+      alert("❗ Course description is required");
+      return;
+    }
+
+    setSubmitting(true);
 
     const payload = {
       ...course,
@@ -134,7 +149,7 @@ export default function AddCourseForm({ token, onCourseAdded }) {
     };
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/courses`, {
+      const res = await fetch(`${API_URL}/courses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,10 +160,28 @@ export default function AddCourseForm({ token, onCourseAdded }) {
 
       const data = await res.json();
 
-      if (res.ok) {
-        alert("✅ Tạo khóa học thành công!");
-        onCourseAdded(data.course);
+      if (res.ok && data.success) {
+        // ✅ Check if user became teacher
+        if (data.becameTeacher) {
+          const user = JSON.parse(localStorage.getItem("user"));
+          if (user && !user.roles.includes("teacher")) {
+            user.roles.push("teacher");
+            user.isInstructor = true;
+            localStorage.setItem("user", JSON.stringify(user));
+            
+            // Show congratulations message
+            alert(`🎉 ${data.message}\n\nYour course has been submitted for admin review. Once approved, you'll officially become an instructor!`);
+          }
+        } else {
+          alert("✅ Course created successfully! Pending admin approval.");
+        }
 
+        // Call parent callback
+        if (onCourseAdded) {
+          onCourseAdded(data.course);
+        }
+
+        // Reset form
         setCourse({
           title: "",
           description: "",
@@ -158,157 +191,229 @@ export default function AddCourseForm({ token, onCourseAdded }) {
           accessType: "public",
         });
         setSelectedCategories([]);
+
+        // Optional: Redirect or refresh
+        // window.location.reload();
       } else {
-        alert("❌ " + data.message);
+        alert("❌ " + (data.message || data.error || "Failed to create course"));
       }
-    } catch {
-      alert("❌ Lỗi kết nối server");
+    } catch (error) {
+      console.error("❌ Error creating course:", error);
+      alert("❌ Network error: " + error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   /* ================= UI ================= */
   return (
     <div className={styles.addCourseForm}>
-      <h3>Thêm khóa học mới</h3>
-
-      <input
-        name="title"
-        placeholder="Tên khóa học"
-        value={course.title}
-        onChange={handleChange}
-        required
-      />
-
-      <textarea
-        name="description"
-        placeholder="Mô tả khóa học"
-        value={course.description}
-        onChange={handleChange}
-        required
-      />
-
-      {/* ===== CATEGORY CHECKBOX ===== */}
-      <div className={styles.categoryGroup}>
-        <p> Chọn danh mục</p>
-        {categories.map((cat) => (
-          <label key={cat._id} className={styles.categoryCheckbox}>
-            <input
-              type="checkbox"
-              checked={selectedCategories.includes(cat._id)}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setSelectedCategories((prev) => [...prev, cat._id]);
-                } else {
-                  setSelectedCategories((prev) =>
-                    prev.filter((id) => id !== cat._id)
-                  );
-                }
-              }}
-            />
-            {cat.name}
-          </label>
-        ))}
+      <div className={styles.formHeader}>
+        <h3>Create New Course</h3>
+        <p className={styles.formSubtitle}>
+          Create your first course and become an instructor!
+        </p>
       </div>
 
-      {/* ===== DRAG & DROP THUMBNAIL ===== */}
-      <div
-        className={`${styles.thumbnailDropZone} ${isDragging ? styles.dragging : ""}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <input
-          type="file"
-          id="thumbnail-input"
-          className={styles.hiddenInput}
-          accept="image/*"
-          onChange={handleFileInputChange}
-          disabled={uploadingThumbnail}
-        />
-        <label htmlFor="thumbnail-input" className={styles.dropLabel}>
-          {uploadingThumbnail ? (
-            <div className={styles.uploadingText}>⏳ Đang upload...</div>
-          ) : (
-            <>
-              <div className={styles.dropIcon}>📸</div>
-              <div className={styles.dropText}>Kéo ảnh vào đây hoặc click để chọn</div>
-            </>
-          )}
-        </label>
-      </div>
-
-      {/* ===== HOẶC PASTE URL ===== */}
-      <label className={styles.urlLabel}>
-        Hoặc dán link ảnh:
-        <input
-          name="thumbnail"
-          placeholder="https://example.com/image.jpg"
-          value={course.thumbnail}
-          onChange={handleChange}
-        />
-      </label>
-
-      {/* ===== PREVIEW ===== */}
-      {course.thumbnail && (
-        <div className={styles.thumbnailPreview}>
-          <img
-            src={course.thumbnail}
-            alt="preview"
-            onError={() => alert("❌ Không thể load ảnh từ URL này")}
-          />
-          <button
-            type="button"
-            className={styles.removeBtn}
-            onClick={() => setCourse({ ...course, thumbnail: "" })}
-          >
-            ❌ Xóa ảnh
-          </button>
-        </div>
-      )}
-
-      <label>
-        🔐 Loại khóa học
-        <select
-          name="accessType"
-          value={course.accessType}
-          onChange={handleChange}
-        >
-          <option value="public">🌍 Public</option>
-          <option value="private">🔒 Private</option>
-        </select>
-      </label>
-
-      {course.accessType === "public" && (
-        <label>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <label htmlFor="title">Course Title *</label>
           <input
-            type="checkbox"
-            name="isFree"
-            checked={course.isFree}
+            id="title"
+            name="title"
+            placeholder="e.g., Complete Web Development Bootcamp"
+            value={course.title}
             onChange={handleChange}
+            required
+            className={styles.input}
           />
-          Miễn phí
-        </label>
-      )}
+        </div>
 
-      {course.accessType === "public" && !course.isFree && (
-        <input
-          type="number"
-          name="price"
-          placeholder="Giá (VNĐ)"
-          value={course.price}
-          onChange={handleChange}
-          min="0"
-        />
-      )}
+        <div className={styles.formGroup}>
+          <label htmlFor="description">Course Description *</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Describe what students will learn in this course..."
+            value={course.description}
+            onChange={handleChange}
+            required
+            rows={6}
+            className={styles.textarea}
+          />
+        </div>
 
-      <button 
-        type="button" 
-        className={styles.submitBtn}
-        onClick={handleSubmit} 
-        disabled={uploadingThumbnail}
-      >
-        ➕ Tạo khóa học
-      </button>
+        {/* ===== CATEGORY CHECKBOX ===== */}
+        <div className={styles.formGroup}>
+          <label>Select Categories *</label>
+          <div className={styles.categoryGroup}>
+            {categories.map((cat) => (
+              <label key={cat._id} className={styles.categoryCheckbox}>
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(cat._id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedCategories((prev) => [...prev, cat._id]);
+                    } else {
+                      setSelectedCategories((prev) =>
+                        prev.filter((id) => id !== cat._id)
+                      );
+                    }
+                  }}
+                />
+                <span className={styles.checkboxLabel}>{cat.name}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* ===== DRAG & DROP THUMBNAIL ===== */}
+        <div className={styles.formGroup}>
+          <label>Course Thumbnail</label>
+          <div
+            className={`${styles.thumbnailDropZone} ${
+              isDragging ? styles.dragging : ""
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              id="thumbnail-input"
+              className={styles.hiddenInput}
+              accept="image/*"
+              onChange={handleFileInputChange}
+              disabled={uploadingThumbnail}
+            />
+            <label htmlFor="thumbnail-input" className={styles.dropLabel}>
+              {uploadingThumbnail ? (
+                <div className={styles.uploadingText}>
+                  <div className={styles.spinner}></div>
+                  <span>Uploading...</span>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.dropIcon}>📸</div>
+                  <div className={styles.dropText}>
+                    Drag & drop image or click to select
+                  </div>
+                  <div className={styles.dropHint}>
+                    Supported: JPG, PNG, GIF (Max 5MB)
+                  </div>
+                </>
+              )}
+            </label>
+          </div>
+
+          {/* ===== OR PASTE URL ===== */}
+          <div className={styles.urlInputGroup}>
+            <label htmlFor="thumbnail-url">Or paste image URL:</label>
+            <input
+              id="thumbnail-url"
+              name="thumbnail"
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={course.thumbnail}
+              onChange={handleChange}
+              className={styles.input}
+            />
+          </div>
+
+          {/* ===== PREVIEW ===== */}
+          {course.thumbnail && (
+            <div className={styles.thumbnailPreview}>
+              <img
+                src={course.thumbnail}
+                alt="Course thumbnail preview"
+                onError={() => {
+                  alert("❌ Cannot load image from this URL");
+                  setCourse({ ...course, thumbnail: "" });
+                }}
+              />
+              <button
+                type="button"
+                className={styles.removeBtn}
+                onClick={() => setCourse({ ...course, thumbnail: "" })}
+              >
+                ✕ Remove
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ===== ACCESS TYPE ===== */}
+        <div className={styles.formGroup}>
+          <label htmlFor="accessType">Course Access Type</label>
+          <select
+            id="accessType"
+            name="accessType"
+            value={course.accessType}
+            onChange={handleChange}
+            className={styles.select}
+          >
+            <option value="public">🌍 Public (Anyone can enroll)</option>
+            <option value="private">🔒 Private (Requires approval)</option>
+          </select>
+          <p className={styles.hint}>
+            {course.accessType === "private"
+              ? "Private courses are always free and require your approval for enrollment"
+              : "Public courses can be free or paid"}
+          </p>
+        </div>
+
+        {/* ===== PRICING (Only for public courses) ===== */}
+        {course.accessType === "public" && (
+          <>
+            <div className={styles.formGroup}>
+              <label className={styles.checkboxLabelInline}>
+                <input
+                  type="checkbox"
+                  name="isFree"
+                  checked={course.isFree}
+                  onChange={handleChange}
+                />
+                <span>This course is free</span>
+              </label>
+            </div>
+
+            {!course.isFree && (
+              <div className={styles.formGroup}>
+                <label htmlFor="price">Course Price (VND)</label>
+                <input
+                  id="price"
+                  type="number"
+                  name="price"
+                  placeholder="e.g., 500000"
+                  value={course.price}
+                  onChange={handleChange}
+                  min="0"
+                  step="1000"
+                  required={!course.isFree}
+                  className={styles.input}
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ===== SUBMIT BUTTON ===== */}
+        <button
+          type="submit"
+          className={styles.submitBtn}
+          disabled={uploadingThumbnail || submitting}
+        >
+          {submitting ? (
+            <>
+              <span className={styles.spinner}></span>
+              Creating Course...
+            </>
+          ) : (
+            <>✨ Create Course</>
+          )}
+        </button>
+      </form>
     </div>
   );
 }

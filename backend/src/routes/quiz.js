@@ -53,6 +53,42 @@ router.post("/create", authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, error: "Không thể tạo quiz" });
   }
 });
+// PATCH /quiz/:quizId/visibility
+router.patch("/:quizId/visibility", authMiddleware, async (req, res) => {
+  try {
+    const { visible } = req.body;
+
+    const quiz = await Quiz.findById(req.params.quizId);
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: "Quiz không tồn tại" });
+    }
+
+    const course = await Course.findById(quiz.courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Khóa học không tồn tại" });
+    }
+
+    // ✅ CHỈ TEACHER / OWNER MỚI ĐƯỢC
+    const isOwner =
+      quiz.createdBy.toString() === req.user._id.toString() ||
+      course.teacher.toString() === req.user._id.toString();
+
+    if (!isOwner) {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền ẩn/hiện quiz này",
+      });
+    }
+
+    quiz.visible = visible;
+    await quiz.save();
+
+    res.json({ success: true, quiz });
+  } catch (err) {
+    console.error("❌ VISIBILITY ERROR:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 // ✅ Cập nhật quiz (kèm maxAttempts)
 router.put("/:quizId", authMiddleware, async (req, res) => {

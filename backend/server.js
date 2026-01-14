@@ -25,6 +25,7 @@ const scheduleRoutes = require("./src/routes/schedule");
 const couponRoutes = require("./src/routes/coupon");
 const exerciseRoutes = require("./src/routes/exercise");
 const submissionRoutes = require("./src/routes/submission");
+const payoutRequest = require("./src/routes/PayoutRequest")
 const adminRoutes = require("./src/routes/admin.users")
 // Models
 const Message = require("./src/models/Message");
@@ -99,6 +100,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/payout", payoutRoutes);
+app.use("/api/payout-request", payoutRequest);   
 app.use("/api/exercises", exerciseRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/feedback", feedbackRoutes);

@@ -1,209 +1,223 @@
-/* src/styles/AddCourseForm.module.css */
-
+/* ================= GENERAL ================= */
 .addCourseForm {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 20px;
-  background: white;
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333333;
+}
+
+/* ================= HEADER ================= */
+.formHeader h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+  color: #111111;
+}
+
+.formSubtitle {
+  font-size: 0.95rem;
+  color: #666666;
+  margin-bottom: 1.5rem;
+}
+
+/* ================= FORM GROUP ================= */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  max-width: 600px;
-  margin: 0 auto;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.addCourseForm h3 {
-  margin: 0;
-  font-size: 1.5em;
-  color: #333;
-}
-
-/* ===== INPUT STYLES ===== */
-.addCourseForm input,
-.addCourseForm textarea,
-.addCourseForm select {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.addCourseForm input:focus,
-.addCourseForm textarea:focus,
-.addCourseForm select:focus {
+.input:focus,
+.textarea:focus,
+.select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: #4f46e5; /* Indigo */
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
-.addCourseForm textarea {
-  min-height: 100px;
+.textarea {
   resize: vertical;
+  min-height: 100px;
 }
 
-/* ===== CATEGORY GROUP ===== */
+.hint {
+  font-size: 0.85rem;
+  color: #888888;
+  margin-top: 0.25rem;
+}
+
+/* ================= CATEGORY CHECKBOX ================= */
 .categoryGroup {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 15px;
-  background-color: #f9f9f9;
-}
-
-.categoryGroup p {
-  margin: 0 0 10px 0;
-  font-weight: 600;
-  color: #333;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .categoryCheckbox {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  background: #f5f5f5;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
   cursor: pointer;
-
-}
-
-.categoryCheckbox:last-child {
-  margin-bottom: 0;
+  font-size: 0.9rem;
+  transition: background 0.2s;
 }
 
 .categoryCheckbox input {
-  margin-right: 8px;
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
+  margin-right: 0.5rem;
 }
 
 .categoryCheckbox:hover {
-  color: #007bff;
+  background: #e0e7ff; /* Indigo light */
 }
 
-/* ===== DRAG & DROP ZONE ===== */
+/* ================= DRAG & DROP ================= */
 .thumbnailDropZone {
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  padding: 40px 20px;
+  position: relative;
+  border: 2px dashed #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  background-color: #f9f9f9;
-  margin: 15px 0;
-}
-
-.thumbnailDropZone:hover {
-  border-color: #007bff;
-  background-color: #f0f7ff;
+  transition: border-color 0.2s, background 0.2s;
+  background-color: #fafafa;
 }
 
 .thumbnailDropZone.dragging {
-  border-color: #28a745;
-  background-color: #e8f5e9;
-  transform: scale(1.02);
+  border-color: #4f46e5;
+  background-color: #f0f0ff;
+}
+
+.hiddenInput {
+  display: none;
 }
 
 .dropLabel {
-  cursor: pointer;
-  display: block;
-  color: #333;
-  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #555555;
 }
 
 .dropIcon {
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-
-.dropText {
-  font-size: 14px;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .uploadingText {
-  font-size: 16px;
-  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* ===== THUMBNAIL PREVIEW ===== */
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #4f46e5;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.dropText {
+  font-weight: 500;
+}
+
+.dropHint {
+  font-size: 0.75rem;
+  color: #999999;
+  margin-top: 0.3rem;
+}
+
+/* ================= URL INPUT ================= */
+.urlInputGroup input {
+  margin-top: 0.4rem;
+}
+
+/* ================= THUMBNAIL PREVIEW ================= */
 .thumbnailPreview {
-  margin: 15px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f5f5f5;
-  padding: 10px;
+  margin-top: 1rem;
+  position: relative;
+  display: inline-block;
 }
 
 .thumbnailPreview img {
-  width: 100%;
-  max-height: 300px;
-  border-radius: 8px;
+  width: 180px;
+  height: 100px;
   object-fit: cover;
-  display: block;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
 .removeBtn {
-  margin-top: 10px;
-  padding: 8px 12px;
-  background-color: #ff4444;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4d4f;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
   cursor: pointer;
-  font-weight: 600;
-  width: 100%;
-  transition: background-color 0.3s ease;
+  transition: background 0.2s;
 }
 
 .removeBtn:hover {
-  background-color: #cc0000;
+  background: #d9363e;
 }
 
-/* ===== BUTTON ===== */
+/* ================= CHECKBOX INLINE ================= */
+.checkboxLabelInline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+/* ================= SUBMIT BUTTON ================= */
 .submitBtn {
-  padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #4f46e5;
   color: white;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.submitBtn:hover:not(:disabled) {
-  background-color: #0056b3;
+  transition: background 0.2s, transform 0.1s;
 }
 
 .submitBtn:disabled {
-  background-color: #ccc;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* ===== LABEL STYLES ===== */
-.addCourseForm label {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-}
-
-.addCourseForm label select {
-  margin-left: 10px;
-  flex: 1;
-}
-
-.urlLabel {
-  font-size: 0.9em;
-  color: #666;
-  display: flex;
-  flex-direction: column;
-}
-
-.urlLabel input {
-  margin-top: 5px;
-}
-
-/* ===== HIDDEN INPUT ===== */
-.hiddenInput {
-  display: none;
+.submitBtn:hover:not(:disabled) {
+  background-color: #4338ca;
+  transform: translateY(-1px);
 }

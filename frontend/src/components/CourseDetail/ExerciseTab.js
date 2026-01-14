@@ -577,7 +577,56 @@ export default function ExerciseTab({ course, courseId, isEditMode }) {
       alert("❌ Lỗi kết nối server");
     }
   };
+  const handleQuizUpdated = (updatedQuiz) => {
+  // Nếu là tạo mới
+  if (!editingQuiz) {
+    setQuizzes(prev => [...prev, updatedQuiz]);
+  } else {
+    // Nếu là cập nhật
+    setQuizzes(prev =>
+      prev.map(q => q._id === updatedQuiz._id ? updatedQuiz : q)
+    );
+  }
+  
+  // Tắt chế độ edit/creating
+  setEditingQuiz(null);
+  setCreating(false);
+};
+const handleToggleVisibility = async (quizId, currentVisible) => {
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/quiz/${quizId}/visibility`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          visible: !currentVisible,
+        }),
+      }
+    );
 
+    const data = await res.json();
+    if (res.ok && data.success) {
+      // Update danh sách quiz
+      setQuizzes(prev =>
+        prev.map(q =>
+          q._id === quizId ? { ...q, visible: !currentVisible } : q
+        )
+      );
+      alert(
+        !currentVisible ? "✅ Quiz đã hiển thị" : "✅ Quiz đã ẩn"
+      );
+    } else {
+      alert("❌ " + (data.message || "Không thể cập nhật"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  }
+};
   if (loading) return <p>⏳ Đang tải quiz...</p>;
   if (errorMsg) return <p>{errorMsg}</p>;
   if (!quizzes || !Array.isArray(quizzes)) return <p>⚠️ Dữ liệu quiz không hợp lệ</p>;
@@ -623,9 +672,12 @@ export default function ExerciseTab({ course, courseId, isEditMode }) {
               course={course}
               token={token}
               editingQuiz={editingQuiz}
+              onQuizUpdated={handleQuizUpdated}  // 👈 THÊM CÁI NÀY
+
               onCancelEdit={() => {
                 setEditingQuiz(null);
                 setCreating(false);
+                
               }}
               onSaveQuiz={(updatedQuiz) => {
                 setQuizzes(prev =>
@@ -633,6 +685,7 @@ export default function ExerciseTab({ course, courseId, isEditMode }) {
                 );
                 setEditingQuiz(null);
                 setCreating(false);
+                
               }}
             />
           ) : (

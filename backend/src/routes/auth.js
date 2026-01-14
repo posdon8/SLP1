@@ -385,33 +385,95 @@ router.post("/change-password", authMiddleware, async (req, res) => {
 
 //login
 router.post("/login", async (req, res) => {
-    try {
+  try {
     const { username, password } = req.body;
 
+    console.log("🔐 Login attempt:", { username });
+
+    // Validate input
+    if (!username || !password) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Username and password are required" 
+      });
+    }
+
+    // Find user by username or email
     const user = await User.findOne({
-  $or: [{ username }, { email: username }]
-})
-;
-    if (!user) return res.status(400).json({ error: "User not found" });
+      $or: [{ username }, { email: username }]
+    });
 
+    if (!user) {
+      console.log("❌ User not found:", username);
+      return res.status(400).json({ 
+        success: false,
+        error: "Invalid credentials" 
+      });
+    }
+
+    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+    if (!isMatch) {
+      console.log("❌ Invalid password for:", username);
+      return res.status(400).json({ 
+        success: false,
+        error: "Invalid credentials" 
+      });
+    }
 
-    const token = jwt.sign({ id: user._id,
+    // ✅ Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user._id,
         username: user.username,
         email: user.email,
-        roles: user.roles }, JWT_SECRET, { expiresIn: "1d" });
-
-    res.json({ message: "Login successful", token, user: {
-        _id: user._id,
-        name: user.username,
-        fullName: user.fullName,
         roles: user.roles 
-      } });
-} catch (error) {
-    res.status(500).json({ error: error.message });
-}
+      }, 
+      JWT_SECRET, 
+      { expiresIn: "7d" }
+    );
+
+    // ✅ CRITICAL: Validate token before sending
+    if (!token) {
+      console.error("❌ Failed to generate token");
+      return res.status(500).json({ 
+        success: false,
+        error: "Failed to generate authentication token" 
+      });
+    }
+
+    console.log("✅ Login successful:", {
+      userId: user._id,
+      username: user.username,
+      roles: user.roles,
+      tokenLength: token.length,
+      tokenPreview: token.substring(0, 20) + "..."
+    });
+
+    // ✅ Return consistent response
+    res.json({ 
+      success: true,
+      message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        username: user.username,  // ✅ Changed from 'name'
+        fullName: user.fullName,
+        email: user.email,
+        roles: user.roles || ['student'],  // ✅ Always return array
+        avatarUrl: user.avatarUrl
+      } 
+    });
+
+  } catch (error) {
+    console.error("❌ Login error:", error);
+    res.status(500).json({ 
+      success: false,
+      error: "Server error during login" 
+    });
+  }
 });
+
 router.post('/google-login', async (req, res) => {
   try {
     const { credential } = req.body; // ⭐ Thay từ tokenId

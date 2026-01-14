@@ -6,6 +6,7 @@
   padding: 40px 60px;
   background: #f9fafb;
   color: #222;
+  height: 1000px;
 }
 
 /* --- Header --- */
@@ -31,6 +32,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.25s ease;
+  margin-right: 8px;
 }
 
 .open-form-btn:hover {

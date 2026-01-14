@@ -338,7 +338,12 @@ const fetchCategories = async () => {
             <button
               className="icon voucher"
               onClick={() => navigate("/admin/users")}
-            >asd</button></>
+            ><img
+                className="logo"
+                src={`${process.env.REACT_APP_API_URL.replace('/api','')}/uploads/images/group-users.png`}
+                alt="logo"
+                style={{ height: "28px", background: "white" }}
+              /></button></>
           )}
 
           {user && (

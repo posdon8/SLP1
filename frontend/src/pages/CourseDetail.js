@@ -721,7 +721,7 @@ export default function CourseDetail() {
           </div>
           {/* Sidebar */}
           <div className="course-sidebar">
-            {user.roles?.includes("student") && course.isFree && (
+            {user.roles?.includes("student") && course.isFree && !course.editable && (
               <button
                 className="join-btn"
                 onClick={handleJoinCourse}
@@ -752,7 +752,7 @@ export default function CourseDetail() {
           </div>
         )}
         
-        {isTeacher && course.students?.length > 0 && (
+        {isTeacher && course.students?.length > 0 && !course.isFree && (
           <div className="teacher-chat-list">
             <h4>👥 Danh sách học viên ({course.students.length})</h4>
             <div className="student-list">

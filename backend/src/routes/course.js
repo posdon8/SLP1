@@ -13,38 +13,147 @@ const { updateTeacherAverageRating } = require("../services/teacherRating");
 // 1️⃣ ROUTES KHÔNG CÓ THAM SỐ
 // ========================================
 
-router.post("/", verifyTeacher, async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const { title, description, categories, price, isFree, accessType, thumbnail } = req.body;
-    const finalPrice = isFree ? 0 : price;
+    const userId = req.user._id;
+
+    console.log("📝 Creating course:", {
+      userId,
+      title,
+      currentRoles: req.user.roles
+    });
+
+    // 1️⃣ Get user with full data
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        error: "User not found" 
+      });
+    }
+
+    console.log("👤 User found:", {
+      username: user.username,
+      roles: user.roles
+    });
+
+    // 2️⃣ Check if user already has teacher role
+    const isAlreadyTeacher = user.roles && user.roles.includes("teacher");
+    let becameTeacher = false;
+
+    // 3️⃣ If not teacher yet, upgrade them
+    if (!isAlreadyTeacher) {
+      console.log("⬆️ Upgrading user to teacher...");
+      
+      user.roles = user.roles || [];
+      if (!user.roles.includes("teacher")) {
+        user.roles.push("teacher");
+      }
+      user.isInstructor = true;
+      await user.save();
+      
+      becameTeacher = true;
+      console.log("✅ User upgraded to teacher:", {
+        username: user.username,
+        newRoles: user.roles
+      });
+    }
+
+    // 4️⃣ Create the course
+    const finalPrice = isFree || accessType === "private" ? 0 : price;
 
     const newCourse = new Course({
       title,
       description,
       categories,
-      teacher: req.user._id,
+      teacher: userId,
       price: finalPrice,
-      isFree,
+      isFree: isFree || accessType === "private",
       accessType,
       thumbnail,
       approvalStatus: "pending"
     });
 
+    // Set default settings for private courses
     if (accessType === "private") {
       newCourse.codeDisabled = false;
       newCourse.enrollmentMode = "auto";
+       newCourse.enrollmentCode = Math.random()
+    .toString(36)
+    .substring(2, 8)
+    .toUpperCase();
     }
     
     await newCourse.save();
+    console.log("✅ Course created:", {
+      courseId: newCourse._id,
+      title: newCourse.title,
+      teacher: newCourse.teacher
+    });
+
+    // 5️⃣ Populate teacher info before sending response
+    await newCourse.populate("teacher", "fullName email username");
+    await newCourse.populate("categories", "name");
+
     res.status(201).json({
-      message: "✅ Khóa học đã được tạo thành công!",
-      course: newCourse
+      success: true,
+      message: becameTeacher 
+        ? "🎉 Congratulations! You are now a teacher and your course has been created!"
+        : "✅ Course created successfully!",
+      course: newCourse,
+      becameTeacher  // Frontend uses this to update UI
     });
   } catch (err) {
-    console.error("Error creating course:", err);
-    res.status(500).json({ error: "Không thể tạo khóa học!" });
+    console.error("❌ Error creating course:", err);
+    res.status(500).json({ 
+      success: false,
+      error: "Failed to create course",
+      message: err.message 
+    });
   }
 });
+router.post(
+  "/search-by-code",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { code } = req.body;
+
+      if (!code) {
+        return res.status(400).json({
+          success: false,
+          message: "Thiếu mã code",
+        });
+      }
+
+      const course = await Course.findOne({
+        enrollmentCode: code.toUpperCase(),
+      }).populate("teacher", "fullName");
+
+      if (!course) {
+        return res.status(404).json({
+          success: false,
+          message: "Không tìm thấy khóa học",
+        });
+      }
+
+      // ❗ KHÔNG check public/private ở đây
+      // Vì có code nghĩa là có quyền xem info
+
+      res.json({
+        success: true,
+        course,
+      });
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: err.message,
+      });
+    }
+  }
+);
+
 
 router.get("/admin/pending", authMiddleware, adminOnly, async (req, res) => {
   const courses = await Course.find({ approvalStatus: "pending" })
@@ -84,6 +193,43 @@ router.put("/admin/:id/reject", authMiddleware, adminOnly, async (req, res) => {
 
   await course.save();
   res.json({ message: "❌ Khóa học đã bị từ chối" });
+});
+
+router.put("/:id/resubmit", authMiddleware, async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // ❌ Không phải chủ course
+    if (course.teacher.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    // ❌ Chỉ resubmit khi bị reject
+    if (course.approvalStatus !== "rejected") {
+      return res.status(400).json({
+        message: "Only rejected courses can be resubmitted"
+      });
+    }
+
+    course.approvalStatus = "pending";
+    course.adminReview = null;
+    course.resubmittedAt = new Date();
+
+    await course.save();
+
+    res.json({
+      success: true,
+      message: "Course resubmitted successfully",
+      course
+    });
+  } catch (err) {
+    console.error("❌ Resubmit error:", err);
+    res.status(500).json({ message: err.message });
+  }
 });
 
 router.get("/filter", async (req, res) => {
@@ -213,13 +359,22 @@ router.get("/search", async (req, res) => {
   }
 });
 
-router.get("/my-courses", authMiddleware, verifyTeacher, async (req, res) => {
+router.get("/my-courses", verifyTeacher, async (req, res) => {
   try {
-    const courses = await Course.find({ teacher: req.user._id });
-    res.json(courses);
+    const courses = await Course.find({ teacher: req.user._id })
+      .populate("categories", "name")
+      .sort({ createdAt: -1 });
+
+    // ✅ Return object, not array
+    res.json({
+      success: true,
+      courses: courses  // Array inside object
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Lỗi server khi lấy danh sách khóa học" });
+    res.status(500).json({ 
+      success: false,
+      error: err.message 
+    });
   }
 });
 
@@ -310,13 +465,19 @@ router.put("/:id/hidden",
         return res.status(404).json({ success: false, message: "Course not found" });
       }
 
-      course.isHidden = !course.isHidden;
-      await course.save();
+      const updatedCourse = await Course.findByIdAndUpdate(
+        req.params.id,
+        { $set: { isHidden: !course.isHidden } },
+        {
+          new: true,
+          runValidators: false, // 🔥 QUAN TRỌNG
+        }
+      );
 
-      res.json({
+       res.json({
         success: true,
-        isHidden: course.isHidden,
-        message: course.isHidden
+        isHidden: updatedCourse.isHidden,
+        message: updatedCourse.isHidden
           ? "🙈 Khóa học đã bị ẩn"
           : "👁️ Khóa học đã được hiển thị lại",
       });
@@ -407,7 +568,11 @@ router.post("/:id/join-by-code", authMiddleware, async (req, res) => {
       return res.status(404).json({ success: false, message: "Người dùng không tồn tại" });
     }
 
-    const course = await Course.findOne({ enrollmentCode: code });
+    const course = await Course.findOne({
+  _id: req.params.id,
+  enrollmentCode: code
+});
+
 
     if (!course) {
       return res.status(400).json({ success: false, message: "❌ Mã code không hợp lệ" });
@@ -686,7 +851,6 @@ router.put("/:id/disable-code", authMiddleware, verifyCourseOwner, async (req, r
 });
 
 // GET /:id - GENERIC ROUTE
-
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
@@ -697,39 +861,43 @@ router.get("/:id", authMiddleware, async (req, res) => {
         message: "Course ID không hợp lệ"
       });
     }
+
     const course = await Course.findById(req.params.id)
       .populate("teacher", "_id fullName roles")
       .populate("students", "_id fullName email");
 
-    if (!course) return res.status(404).json({ error: "Không tìm thấy khóa học" });
+    if (!course) {
+      return res.status(404).json({ error: "Không tìm thấy khóa học" });
+    }
 
+    // ✅ Define các biến cần thiết
     const isOwner = course.teacher?._id?.equals(req.user._id);
-    // ✅ FIX: Thay role thành roles
-    const students = (req.user.roles?.includes('teacher') && !isOwner) ? [] : course.students;
-    const joined = course.students.some(s => s._id.toString() === req.user._id.toString());
+    const isAdmin = req.user.roles?.includes('admin');
+    const isStudentEnrolled = course.students.some(s => s._id.toString() === req.user._id.toString());
+    const isTeacher = req.user.roles?.includes('teacher');
 
-    if (course.isHidden && course.teacher._id.toString() !== req.user._id.toString()) {
+    // ✅ Kiểm tra course bị ẩn
+    if (course.isHidden && !isOwner && !isAdmin) {
       return res.status(403).json({
         error: "Khóa học hiện đang bị ẩn",
       });
     }
-    
-    // ✅ FIX: Thay role thành roles
-    if (
-      course.accessType === "private" &&
-      req.user.roles?.includes('student') &&
-      !course.students.includes(req.user._id)
-    ) {
+
+    // ✅ Kiểm tra course private
+    if (course.accessType === "private" && !isOwner && !isAdmin && !isStudentEnrolled) {
       return res.status(403).json({
-        error: "🔒 Khóa học riêng tư",
+        error: "🔒 Khóa học riêu tư",
       });
     }
 
+    // ✅ Chỉ hiển thị danh sách students nếu là teacher chủ sở hữu hoặc admin
+    const students = (isTeacher && !isOwner && !isAdmin) ? [] : course.students;
+
     res.json({
       ...course.toObject(),
-      editable: req.user.roles?.includes('teacher') && isOwner,
+      editable: isTeacher && isOwner,
       students,
-      joined,
+      joined: isStudentEnrolled,
     });
   } catch (err) {
     console.error(err);

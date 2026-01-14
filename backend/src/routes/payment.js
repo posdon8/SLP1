@@ -7,6 +7,8 @@ const Revenue = require("../models/Revenue");
 const Course = require("../models/Course");
 const User = require("../models/User");
 const Coupon = require("../models/Coupon");
+const { Payout } = require("../models/Payout");
+
 // ✅ FIX: Import từ backend utils, không phải frontend
 const { calculateEarnings } = require("../utils/commission");
 
@@ -550,29 +552,42 @@ router.get("/teacher/course/:courseId", authMiddleware, async (req, res) => {
 // ========================
 // ========================
 // GET /api/payment/teacher-earnings
+// Get teacher's earnings summary with payout info
 // ========================
 router.get("/teacher-earnings", authMiddleware, async (req, res) => {
   try {
     const teacherId = req.user._id.toString();
 
-    // 🔥 LẤY PAYMENT CÓ CHỨA TEACHER
+    // ==============================
+    // 1️⃣ REVENUE = NGUỒN SỰ THẬT SỐ DƯ
+    // ==============================
+    const revenue = await Revenue.findOne({ teacherId });
+
+    const pendingAmount = revenue?.pendingAmount || 0;
+    const lockedAmount  = revenue?.lockedAmount || 0;
+    const paidAmount    = revenue?.paidAmount || 0;
+
+    const availableAmount = Math.max(0, pendingAmount - lockedAmount);
+
+    const totalEarnings = pendingAmount + lockedAmount + paidAmount;
+
+    // ==============================
+    // 2️⃣ PAYMENT – CHỈ ĐỂ THỐNG KÊ
+    // ==============================
     const payments = await Payment.find({
       status: "completed",
       "courseBreakdown.teacherId": teacherId
     })
       .populate("studentId", "username")
-      .populate("courseId", "title")
       .sort({ completedAt: -1 });
 
-    let totalEarnings = 0;
     let totalPlatformFee = 0;
-
     const monthlyMap = {};
 
     payments.forEach(payment => {
       const month = new Date(payment.completedAt)
         .toISOString()
-        .slice(0, 7); // YYYY-MM
+        .slice(0, 7);
 
       for (const item of payment.courseBreakdown) {
         if (item.teacherId?.toString() !== teacherId) continue;
@@ -580,7 +595,6 @@ router.get("/teacher-earnings", authMiddleware, async (req, res) => {
         const earning = item.teacherEarns || 0;
         const platformFee = item.platformFee || 0;
 
-        totalEarnings += earning;
         totalPlatformFee += platformFee;
 
         if (!monthlyMap[month]) {
@@ -595,8 +609,12 @@ router.get("/teacher-earnings", authMiddleware, async (req, res) => {
 
         monthlyMap[month].earning += earning;
         monthlyMap[month].platformFee += platformFee;
-        monthlyMap[month].studentSet.add(payment.studentId?._id.toString());
-        monthlyMap[month].courseSet.add(item.courseId?.toString());
+        if (payment.studentId?._id) {
+          monthlyMap[month].studentSet.add(payment.studentId._id.toString());
+        }
+        if (item.courseId) {
+          monthlyMap[month].courseSet.add(item.courseId.toString());
+        }
       }
     });
 
@@ -610,31 +628,44 @@ router.get("/teacher-earnings", authMiddleware, async (req, res) => {
       }))
       .sort((a, b) => b.month.localeCompare(a.month));
 
-    // ===== REVENUE =====
-    const revenue =
-      (await Revenue.findOne({ teacherId })) || {
-        pendingAmount: 0,
-        paidAmount: 0,
-        lastPayoutDate: null,
-        nextPayoutDate: null
-      };
+    // =========================================
+    // 3️⃣ PAYOUT BATCH = NGUỒN SỰ THẬT LỊCH TRẢ
+    // =========================================
+    let lastPayoutDate = null;
+    let nextPayoutDate = null;
 
-    console.log("✅ Teacher earnings calculated:", {
-      teacherId,
-      totalEarnings,
-      totalPlatformFee,
-      monthlyCount: monthlyBreakdown.length
-    });
+    const lastPayoutBatch = await Payout.findOne({
+      status: "completed",
+      "teachers.teacherId": teacherId
+    })
+      .sort({ processedAt: -1 })
+      .lean();
 
+    if (lastPayoutBatch?.processedAt) {
+      lastPayoutDate = lastPayoutBatch.processedAt;
+
+      nextPayoutDate = new Date(lastPayoutBatch.processedAt);
+      nextPayoutDate.setMonth(nextPayoutDate.getMonth() + 1);
+    }
+
+    // ==============================
+    // 4️⃣ RESPONSE
+    // ==============================
     res.json({
       success: true,
       earnings: {
         totalEarnings,
-        pendingAmount: revenue.pendingAmount || 0,
-        paidAmount: revenue.paidAmount || 0,
+
+        pendingAmount,
+        lockedAmount,
+        availableAmount,
+        paidAmount,
+
         totalPlatformFee,
-        lastPayoutDate: revenue.lastPayoutDate,
-        nextPayoutDate: revenue.nextPayoutDate,
+
+        lastPayoutDate,
+        nextPayoutDate,
+
         monthlyBreakdown
       }
     });
@@ -643,6 +674,8 @@ router.get("/teacher-earnings", authMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
+
 router.get("/teacher/export", authMiddleware, async (req, res) => {
   try {
     const teacherId = req.user._id;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "./TeacherPayment.css";
+import TeacherPayoutRequest from "../components/TeacherPayoutRequest";  // ← ADD THIS LINE
 
 export default function TeacherPayment() {
   // ========================
@@ -17,7 +18,7 @@ export default function TeacherPayment() {
   const [courseDetail, setCourseDetail] = useState(null);
 const [totalRevenue, setTotalRevenue] = useState(0);
 const [totalCompletedCourses, setTotalCompletedCourses] = useState(0);
-
+  
 
 
   const token = localStorage.getItem("token");
@@ -250,6 +251,8 @@ const coursesCount = courseSet.size;
           
           <span>Overview</span>
         </button>
+  
+
         <button
           className={`tab-btn ${tab === "courses" ? "active" : ""}`}
           onClick={() => setTab("courses")}
@@ -271,7 +274,14 @@ const coursesCount = courseSet.size;
 
           <span>Earnings & Payouts</span>
         </button>
+        <button
+          className={`tab-btn ${tab === "payout-request" ? "active" : ""}`}
+          onClick={() => setTab("payout-request")}
+        >
+          <span>Payout Requests</span>
+        </button>
       </div>
+
 
       {/* TAB 1: Overview */}
       {tab === "overview" && stats && (
@@ -381,24 +391,24 @@ const coursesCount = courseSet.size;
                   // ✅ Filter payments by courseIds array or courseId field
                   // Fix filter payments by course
 
-                  
-                 const courseRevenue = payments.reduce((sum, p) => {
-  if (p.status !== "completed") return sum;
+                                  
+                  const courseRevenue = payments.reduce((sum, p) => {
+                  if (p.status !== "completed") return sum;
 
-  const breakdown = p.courseBreakdown?.find(
-    (c) => c.courseId.toString() === course._id.toString()
-  );
+                  const breakdown = p.courseBreakdown?.find(
+                    (c) => c.courseId.toString() === course._id.toString()
+                  );
 
-  return sum + (breakdown?.finalPrice || 0);
-}, 0);
+                  return sum + (breakdown?.finalPrice || 0);
+                }, 0);
 
-const courseSales = payments.filter(
-  (p) =>
-    p.status === "completed" &&
-    p.courseBreakdown?.some(
-      (c) => c.courseId.toString() === course._id.toString()
-    )
-).length;
+                const courseSales = payments.filter(
+                  (p) =>
+                    p.status === "completed" &&
+                    p.courseBreakdown?.some(
+                      (c) => c.courseId.toString() === course._id.toString()
+                    )
+                ).length;
 
 
                   return (
@@ -422,8 +432,8 @@ const courseSales = payments.filter(
                           <div className="metric">
                             <span className="label">Price:</span>
                             <span className="value">
-  {formatCurrency(course.price || 0)}
-</span>
+                            {formatCurrency(course.price || 0)}
+                          </span>
 
 
                           </div>
@@ -479,8 +489,8 @@ const courseSales = payments.filter(
                     <div className="stat">
                       <span className="label">Total Revenue</span>
                       <span className="value">
-  {formatCurrency(courseDetail.stats?.totalRevenue || 0)}
-</span>
+                      {formatCurrency(courseDetail.stats?.totalRevenue || 0)}
+                    </span>
 
                     </div>
                     <div className="stat">
@@ -596,148 +606,170 @@ const courseSales = payments.filter(
         </div>
       )}
 
-      {/* TAB 4: Earnings & Payouts */}
-      {tab === "earnings" && earnings && (
-        <div className="tab-content">
-          <section className="earnings-stats">
-            <h2>Earnings & Payouts Summary</h2>
-            <div className="earnings-grid">
-              <div className="stat-card total">
-                <div className="stat-icon">💰</div>
-                <div className="stat-content">
-                  <label className="stat-label">Total Your Earnings</label>
-                  <div className="stat-amount">
-                    {formatCurrency(earnings.totalEarnings || 0)}
-                  </div>
-                  <p className="stat-detail">Your share from all sales</p>
-                </div>
-              </div>
 
-              <div className="stat-card platform">
-                <div className="stat-icon">🏢</div>
-                <div className="stat-content">
-                  <label className="stat-label">Platform Revenue</label>
-                  <div className="stat-amount secondary">
-                    {formatCurrency(earnings.totalPlatformFee || 0)}
-                  </div>
-                  <p className="stat-detail">Platform commission</p>
-                </div>
-              </div>
-
-              <div className="stat-card pending">
-                  <div className="stat-icon">⏳</div>
-                  <div className="stat-content">
-                    <label className="stat-label">Pending Payout (In Draft Batch)</label>
-                    <div className="stat-amount warning">
-                      {formatCurrency(earnings.pendingAmount || 0)}
-                    </div>
-                    <p className="stat-detail">
-                      Included in payout batch but not processed yet
-                    </p>
-                  </div>
-                </div>
-
-
-              <div className="stat-card paid">
-                <div className="stat-icon">✅</div>
-                <div className="stat-content">
-                  <label className="stat-label">Already Paid</label>
-                  <div className="stat-amount success">
-                    {formatCurrency(earnings.paidAmount || 0)}
-                  </div>
-                  <p className="stat-detail">Received to bank</p>
-                </div>
-              </div>
+{tab === "earnings" && earnings && (
+  <div className="tab-content">
+    <section className="earnings-stats">
+      <h2>Earnings & Payouts Summary</h2>
+      <div className="earnings-grid">
+        {/* Total Earnings */}
+        <div className="stat-card total">
+          <div className="stat-content">
+            <label className="stat-label">💰 Total Your Earnings</label>
+            <div className="stat-amount">
+              {formatCurrency(earnings.totalEarnings || 0)}
             </div>
-          </section>
-
-          <section className="payout-timeline">
-            <h2>Payout Schedule</h2>
-            <div className="timeline-grid">
-              <div
-                className={`timeline-item ${
-                  earnings.lastPayoutDate ? "" : "empty"
-                }`}
-              >
-                <div className="timeline-icon">📤</div>
-                <div className="timeline-content">
-                  <p className="timeline-label">Last Payout</p>
-                  <p className="timeline-date">
-                    {earnings.lastPayoutDate
-                      ? formatDate(earnings.lastPayoutDate)
-                      : "No payout yet"}
-                  </p>
-                </div>
-              </div>
-
-              <div
-                className={`timeline-item next ${
-                  earnings.nextPayoutDate ? "" : "empty"
-                }`}
-              >
-                <div className="timeline-icon">⏰</div>
-                <div className="timeline-content">
-                  <p className="timeline-label">Next Payout</p>
-                  <p className="timeline-date">
-                    {earnings.nextPayoutDate
-                      ? formatDate(earnings.nextPayoutDate)
-                      : "Not scheduled"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {earnings.monthlyBreakdown && earnings.monthlyBreakdown.length > 0 ? (
-            <section className="monthly-breakdown">
-              <h2> Monthly Breakdown</h2>
-              <div className="table-wrapper">
-                <table className="breakdown-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Your Earning</th>
-                      <th>Platform Fee</th>
-                      <th>Students</th>
-                      <th>Courses</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {earnings.monthlyBreakdown.map((month, idx) => (
-                      <tr key={idx}>
-                        <td className="month-cell">
-                          {new Date(month.month + "-01").toLocaleDateString(
-                            "en-US",
-                            { year: "numeric", month: "long" }
-                          )}
-                        </td>
-                        <td className="amount-cell earning">
-                          <strong>{formatCurrency(month.earning || 0)}</strong>
-                        </td>
-                        <td className="amount-cell platform">
-                          {formatCurrency(month.platformFee || 0)}
-                        </td>
-                        <td className="count-cell">
-                          <span className="badge">{month.studentCount || 0}</span>
-                        </td>
-                        <td className="count-cell">
-                          <span className="badge secondary">
-                            {month.courseCount || 0}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          ) : (
-            <section className="empty-state">
-              <p>📭 No monthly data yet. Start selling courses to earn!</p>
-            </section>
-          )}
+            <p className="stat-detail">Your share from all sales</p>
+          </div>
         </div>
-      )}
+
+        {/* Platform Fee */}
+        <div className="stat-card platform">
+          <div className="stat-content">
+            <label className="stat-label">🏢 Platform Revenue</label>
+            <div className="stat-amount secondary">
+              {formatCurrency(earnings.totalPlatformFee || 0)}
+            </div>
+            <p className="stat-detail">Platform commission</p>
+          </div>
+        </div>
+
+        {/* Pending Amount */}
+        <div className="stat-card pending">
+          <div className="stat-content">
+            <label className="stat-label">⏳ Pending Balance</label>
+            <div className="stat-amount warning">
+              {formatCurrency(earnings.pendingAmount || 0)}
+            </div>
+            <p className="stat-detail">
+              Not yet paid or requested
+            </p>
+          </div>
+        </div>
+
+
+        {/* Paid Amount */}
+        <div className="stat-card paid">
+          <div className="stat-content">
+            <label className="stat-label">💵 Already Paid</label>
+            <div className="stat-amount success">
+              {formatCurrency(earnings.paidAmount || 0)}
+            </div>
+            <p className="stat-detail">Received to bank</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Payout Timeline */}
+    <section className="payout-timeline">
+      <h2>Payout Schedule</h2>
+      <div className="timeline-grid">
+        <div className={`timeline-item ${earnings.lastPayoutDate ? "" : "empty"}`}>
+          <div className="timeline-icon">📤</div>
+          <div className="timeline-content">
+            <p className="timeline-label">Last Payout</p>
+            <p className="timeline-date">
+              {earnings.lastPayoutDate
+                ? formatDate(earnings.lastPayoutDate)
+                : "No payout yet"}
+            </p>
+          </div>
+        </div>
+
+        <div className={`timeline-item next ${earnings.nextPayoutDate ? "" : "empty"}`}>
+          <div className="timeline-icon">⏰</div>
+          <div className="timeline-content">
+            <p className="timeline-label">Next Payout</p>
+            <p className="timeline-date">
+              {earnings.nextPayoutDate
+                ? formatDate(earnings.nextPayoutDate)
+                : "Not scheduled"}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Balance Explanation */}
+    <section className="balance-explanation">
+      <h3>📊 Balance Breakdown</h3>
+      <div className="explanation-box">
+        <div className="explanation-item">
+          <strong>Pending ({formatCurrency(earnings.pendingAmount || 0)}):</strong>
+          <p>Earnings from completed sales not yet paid out or requested.</p>
+        </div>
+        <div className="explanation-item">
+          <strong>Locked ({formatCurrency(earnings.lockedAmount || 0)}):</strong>
+          <p>Amount reserved for your pending payout requests awaiting admin approval.</p>
+        </div>
+        <div className="explanation-item">
+          <strong>Available ({formatCurrency(earnings.availableAmount || 0)}):</strong>
+          <p>Amount you can request for payout right now (Pending - Locked).</p>
+        </div>
+        <div className="explanation-item">
+          <strong>Paid ({formatCurrency(earnings.paidAmount || 0)}):</strong>
+          <p>Total amount already transferred to your bank account.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Monthly Breakdown */}
+    {earnings.monthlyBreakdown && earnings.monthlyBreakdown.length > 0 ? (
+      <section className="monthly-breakdown">
+        <h2>📅 Monthly Breakdown</h2>
+        <div className="table-wrapper">
+          <table className="breakdown-table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Your Earning</th>
+                <th>Platform Fee</th>
+                <th>Students</th>
+                <th>Courses</th>
+              </tr>
+            </thead>
+            <tbody>
+              {earnings.monthlyBreakdown.map((month, idx) => (
+                <tr key={idx}>
+                  <td className="month-cell">
+                    {new Date(month.month + "-01").toLocaleDateString(
+                      "en-US",
+                      { year: "numeric", month: "long" }
+                    )}
+                  </td>
+                  <td className="amount-cell earning">
+                    <strong>{formatCurrency(month.earning || 0)}</strong>
+                  </td>
+                  <td className="amount-cell platform">
+                    {formatCurrency(month.platformFee || 0)}
+                  </td>
+                  <td className="count-cell">
+                    <span className="badge">{month.studentCount || 0}</span>
+                  </td>
+                  <td className="count-cell">
+                    <span className="badge secondary">
+                      {month.courseCount || 0}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ) : (
+      <section className="empty-state">
+        <p>📭 No monthly data yet. Start selling courses to earn!</p>
+      </section>
+    )}
+  </div>
+)}
+      {tab === "payout-request" && (
+  <div className="tab-content">
+    <TeacherPayoutRequest />
+  </div>
+)}
     </div>
   );
 }

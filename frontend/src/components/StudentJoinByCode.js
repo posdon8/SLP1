@@ -24,39 +24,44 @@ export default function StudentJoinByCode() {
   }
 
   const handleSearchByCode = async () => {
-    if (!code.trim()) {
-      setError("❌ Vui lòng nhập mã code");
+  if (!code.trim()) {
+    setError("❌ Vui lòng nhập mã code");
+    return;
+  }
+
+  setLoading(true);
+  setError("");
+  setCourseInfo(null);
+
+  try {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/courses/search-by-code`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ code: code.toUpperCase() }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(`❌ ${data.message}`);
       return;
     }
 
-    setLoading(true);
-    setError("");
-    setSuccess("");
-    setCourseInfo(null);
+    setCourseInfo(data.course);
+  } catch (err) {
+    console.error(err);
+    setError("❌ Có lỗi xảy ra");
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/courses`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      const courses = await response.json();
-      const course = courses.find(c => c.enrollmentCode === code.toUpperCase());
-
-      if (!course) {
-        setError("❌ Không tìm thấy khóa học với mã này");
-        setLoading(false);
-        return;
-      }
-
-      setCourseInfo(course);
-      setError("");
-    } catch (err) {
-      console.error("Search error:", err);
-      setError("❌ Không tìm thấy khóa học");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleJoinCourse = async () => {
     if (!courseInfo) return;
